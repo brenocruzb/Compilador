@@ -1,0 +1,33 @@
+Helpers
+tudo = [0..0xffff];
+digito = ['0' .. '9'];
+letra = ['a' .. 'z'] | ['A' .. 'Z'];
+under = '_';
+simbolo = letra | under;
+
+comentario = '/''/' [0..0xffff]* (10 | 13) | '/''*' [tudo -['*' + '/']]* '*''/';
+
+
+
+
+[0..0xffff]* '*''/';
+
+Tokens
+atribuicao = '<-';
+soma = '+';
+subtracao = '-';
+multiplicacao = '*';
+divisao = '/';
+fim = ';';
+reservado =  's''e';
+vazio = 10 | 13 | ' ' | comentario;
+numero = digito+;
+identificador = simbolo (simbolo|digito)*;
+operador = soma | subtracao | divisao | multiplicacao;
+
+/*expressao = '('expressao')' | expressao operador identificador | identificador ; */
+
+
+Ignored Tokens
+
+vazio;

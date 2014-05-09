@@ -1,3 +1,10 @@
-entrada 9 gag 
+programa teste
 
-gogo upar
+var _string[3];
+
+inicio 
+
+texto <- ' Ola mundo ';
+escreva(tesd);
+
+fim.

@@ -25,7 +25,7 @@ public class Main {
         		try
         		{
         			Token tok = lexer.next();
-        				System.out.printf(tok.getText());
+        				System.out.println(tok.getText());
         			
         			if(tok.getText() == "")
             			break;

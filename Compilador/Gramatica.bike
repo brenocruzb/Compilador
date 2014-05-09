@@ -1,24 +1,68 @@
 Helpers
+tudo = [0..0xffff];
 digito = ['0' .. '9'];
 letra = ['a' .. 'z'] | ['A' .. 'Z'];
-fim = ';';
 under = '_';
 simbolo = letra | under;
-atribuicao = '<-';
+
+comentario = '/''/' [0..0xffff]* (10 | 13) | '/''*' [tudo -['*' + '/']]* '*''/';
+
+
+Tokens
 soma = '+';
 subtracao = '-';
 multiplicacao = '*';
 divisao = '/';
-comentario = '/''/' [0..0xffff]* (10 | 13) | '/''*' [0..0xffff]* '*''/';
+caractere = 'caractere';
+real = 'real';
+inteiro = 'inteiro';
+pontovirgula = ';';
+doispontos = ':';
+maiorque = '>';
+menorque = '<';
+igual = '=';
+maiorigual = '>=';
+menorigual = '<=';
+diferente = '<>';
+atribuicao = '<-';
 
-Tokens
-reservado =  's''e';
-vazio = 10 | 13 | ' ' | comentario;
+programa = 'programa';
+fim = 'fim';
+ponto = '.';
+var = 'var';
+escreva = 'escreva';
+leia = 'leia';
+
+se = 'se';
+entao = 'entao';
+senao = 'senao';
+fimse = 'fim se';
+aspa = ''';
+enquanto = 'enquanto';
+fimenquanto = 'fim enquanto';
+para = 'para';
+ate = 'ate';
+faca = 'faca';
+fimpara = 'fim para';
+passo = 'passo';
+avalie = 'avalie';
+caso = 'caso';
+fimavalie = 'fim avalie';
+
+abrecolchete = '[';
+fecharcolchete = ']';
+e = 'e';
+ou = 'ou';
+xor = 'xor';
+nao = 'nao';
+virgula = ',';
+abreparenteses = '(';
+fechaparenteses = ')';
 numero = digito+;
 identificador = simbolo (simbolo|digito)*;
-operador = soma | subtracao | divisao | multiplicacao;
 
-/*expressao = '('expressao')' | expressao operador identificador | identificador ; */
+
+vazio = 10 | 13 | ' ' | comentario | '	';
 
 Ignored Tokens
 vazio;
