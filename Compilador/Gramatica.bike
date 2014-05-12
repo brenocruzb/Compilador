@@ -13,9 +13,12 @@ soma = '+';
 subtracao = '-';
 multiplicacao = '*';
 divisao = '/';
+
 caractere = 'caractere';
 real = 'real';
 inteiro = 'inteiro';
+string = '''tudo''';
+
 pontovirgula = ';';
 doispontos = ':';
 maiorque = '>';
@@ -51,6 +54,7 @@ fimavalie = 'fim avalie';
 
 abrecolchete = '[';
 fecharcolchete = ']';
+
 e = 'e';
 ou = 'ou';
 xor = 'xor';

@@ -25,6 +25,9 @@ public class Main {
         		try
         		{
         			Token tok = lexer.next();
+        			if(tok.getText() != "\n")
+        				System.out.print(tok.getText());
+        			else
         				System.out.println(tok.getText());
         			
         			if(tok.getText() == "")
@@ -40,7 +43,7 @@ public class Main {
         	if(!houveProblema)
         		System.out.print("\ncódigo pertence a linguagem!!");
         	else
-        		System.out.print("\n!!O executavel nao foi gerado pelos erros de compilacao!!");
+        		System.err.print("\n!!O executavel nao foi gerado pelos erros de compilacao!!");
             
         	//Parser parser = new Parser(lexer); 
             //Start ast = parser.parse() ; 

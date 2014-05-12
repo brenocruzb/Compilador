@@ -1,0 +1,10 @@
+programa teste
+
+var _string[3];
+
+inicio
+
+texto <- ' Ola mundo ';
+escreva(tesd);
+
+fim.

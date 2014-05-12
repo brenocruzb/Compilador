@@ -2,9 +2,9 @@ programa teste
 
 var _string[3];
 
-inicio 
+inicio
 
-texto <- ' Ola mundo ';
+texto <- 'Ola mundo';
 escreva(tesd);
 
 fim.
