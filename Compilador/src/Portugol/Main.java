@@ -17,33 +17,33 @@ public class Main {
             /* Form our AST */ 
         	//Path file = Paths.get("Entrada.txt");
             //byte[] arquivo = Files.readAllBytes(file);
-        	boolean houveProblema = false;
-        	Lexer lexer = new Lexer (new PushbackReader(new FileReader(args[0]), 1024));
+        	MyLexer lexer = new MyLexer (new PushbackReader(new FileReader(args[0]), 1024));
         	
         	while(true)
         	{
         		try
         		{
         			Token tok = lexer.next();
-        			if(tok.getText() != "\n")
-        				System.out.print(tok.getText());
-        			else
-        				System.out.println(tok.getText());
+        			String nome_token = tok.getClass().getName().substring(6);
+        			System.out.print(nome_token+" ");
+        			if(nome_token.equals("Lf"))
+        			{System.out.println("");}
         			
         			if(tok.getText() == "")
             			break;
         		}
         		catch (Exception e) 
         		{ 
-        	        houveProblema = true;    
+        	        lexer.houveProblema = true;    
         			System.out.println ("Erro: "+e.getMessage()); 
         	    }
         	}
         	
-        	if(!houveProblema)
+        	if(!lexer.houveProblema)
         		System.out.print("\ncódigo pertence a linguagem!!");
         	else
-        		System.err.print("\n!!O executavel nao foi gerado pelos erros de compilacao!!");
+        		System.err.println("\n!!O executavel nao foi gerado pois houve erros de compilacao!!");
+        	
             
         	//Parser parser = new Parser(lexer); 
             //Start ast = parser.parse() ; 

@@ -13,8 +13,10 @@
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="throw" key="selection"/>
+		<item value="void defaultCase" key="selection"/>
 		<list key="findhistory">
+			<item value="void defaultCase"/>
+			<item value="defaultCase"/>
 			<item value="throw"/>
 			<item value="try"/>
 		</list>
