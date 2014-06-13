@@ -1,22 +1,15 @@
-programa teste
-
-var _string[3];
-
-//comentario 'simples' inicio
-
+programa identificador;
 inicio
+caractere : Claudio[7], Breno[5];
+inteiro : const trabalho, tempo;
 
-texto <- 'Ola mundo';
-escreva(tesd);
+/*identificadorInicial
 
+Aqui vem o corpo do programa
 
-/*
-	/*S2
-	/*aninhado like procedures*/
-	tolo hauhahuhuauhua
-	//kkkjkj
-	/*breninho!!!*/
-	*/
-*/
+nao esta dando erro porque o sintatico
+esta incompleto
+
+identificadorFinal*/
 
 fim.

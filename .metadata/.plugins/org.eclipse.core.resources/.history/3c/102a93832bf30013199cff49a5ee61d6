@@ -1,0 +1,100 @@
+Helpers
+tudo = [0..0xffff];
+digito = ['0' .. '9'];
+letra = ['a' .. 'z'] | ['A' .. 'Z'];
+under = '_';
+simbolo = letra | under;
+
+hcomentario = '/''/' [tudo-10]* (10);
+
+States
+normal, comentado;
+
+
+Tokens
+{normal} soma = '+';
+{normal} subtracao = '-';
+{normal} multiplicacao = '*';
+{normal} divisao = '/';
+
+{normal} caractere = 'caractere';
+{normal} real = 'real';
+{normal} inteiro = 'inteiro';
+{normal} string = '''tudo''';
+
+{normal} pontovirgula = ';';
+{normal} doispontos = ':';
+{normal} maiorque = '>';
+{normal} menorque = '<';
+{normal} igual = '=';
+{normal} maiorigual = '>=';
+{normal} menorigual = '<=';
+{normal} diferente = '<>';
+{normal} atribuicao = '<-';
+
+{normal} programa = 'programa';
+{normal} inicio = 'inicio';
+{normal} fim = 'fim';
+{normal} ponto = '.';
+{normal} var = 'var';
+{normal} escreva = 'escreva';
+{normal} leia = 'leia';
+
+{normal} se = 'se';
+{normal} entao = 'entao';
+{normal} senao = 'senao';
+{normal} fimse = 'fim se';
+{normal} aspa = ''';
+{normal} enquanto = 'enquanto';
+{normal} fimenquanto = 'fim enquanto';
+{normal} para = 'para';
+{normal} ate = 'ate';
+{normal} faca = 'faca';
+{normal} fimpara = 'fim para';
+{normal} passo = 'passo';
+{normal} avalie = 'avalie';
+{normal} caso = 'caso';
+{normal} fimavalie = 'fim avalie';
+
+{normal} abrecolchete = '[';
+{normal} fecharcolchete = ']';
+
+{normal} e = 'e';
+{normal} ou = 'ou';
+{normal} xor = 'xor';
+{normal} nao = 'nao';
+{normal} virgula = ',';
+{normal} abreparenteses = '(';
+{normal} fechaparenteses = ')';
+{normal} numero = digito+;
+{normal} identificador = simbolo (simbolo|digito)*;
+
+{normal} comentarioemlinha = hcomentario;
+{normal} lf = 10;
+{normal} espaco = ' '+;
+{normal} cr = 13;
+
+{normal->comentado, comentado} comentado = '/*';
+{comentado} comentadofinal = '*/';
+{comentado} corpo = [tudo -['*' + '/']]*;
+{comentado} estrela = '*';
+{comentado} barra = '/';
+
+Ignored Tokens
+lf,
+espaco,
+comentarioemlinha,
+cr;
+
+Productions
+
+total = 
+programa identificador pontovirgula
+declaracao*
+inicio
+construcao*
+fim ponto;
+
+declaracao = var identificador pontovirgula;
+construcao = identificador atribuicao expressao pontovirgula;
+expressao = identificador;

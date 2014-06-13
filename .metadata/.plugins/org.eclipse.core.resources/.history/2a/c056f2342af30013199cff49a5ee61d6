@@ -1,0 +1,11 @@
+package Portugol;
+
+import lexer.*;
+import parser.*;
+
+public class MeuParser extends Parser{
+	private int last_pos;
+    private int last_line;
+	public MeuParser(Lexer lexer)
+	{super(lexer);}
+}

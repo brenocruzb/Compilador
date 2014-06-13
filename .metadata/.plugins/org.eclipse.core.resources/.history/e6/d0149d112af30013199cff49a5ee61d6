@@ -1,0 +1,9 @@
+package Portugol;
+
+import lexer.*;
+import parser.*;
+
+public class MeuParser extends Parser{
+	public MeuParser(Lexer lexer)
+	{super(lexer);}
+}
