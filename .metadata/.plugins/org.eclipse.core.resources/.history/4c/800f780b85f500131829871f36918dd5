@@ -1,0 +1,20 @@
+programa identificador;
+inicio
+	const Pernas 2;
+const Disciplina 'Compiladores';
+caractere : Claudio[7], Breno[5];
+
+//
+
+//'Filosofia'
+
+/*identificadorInicial
+
+Aqui vem o corpo do programa
+
+nao esta dando erro porque o sintatico
+esta incompleto
+
+identificadorFinal
+*/
+fim.

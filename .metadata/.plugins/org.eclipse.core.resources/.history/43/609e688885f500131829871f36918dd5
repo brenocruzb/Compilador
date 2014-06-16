@@ -1,0 +1,9 @@
+/*
+	Compilador 
+*/
+programa ProgramaDeTeste;
+inicio
+	const Pernas 2;
+	const Disciplina 'Compiladores';  //definição de variaveis
+	caractere : Claudio[7], Breno[5];
+fim.

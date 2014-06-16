@@ -1,0 +1,17 @@
+/*
+	Compilador 
+*/
+programa ProgramaDeTeste;
+inicio
+	const Desenvolvedor1 'Breno Cruz';
+	const Desenvolvedor2 'Claudio Mota';
+	inteiro : entrada, iterador, opcao;
+	
+	iterador <- 0;
+	opcao <- 0;
+	
+	escreva('Olá mundo');
+	
+	
+	leia(a)
+fim.

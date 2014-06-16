@@ -1,0 +1,20 @@
+programa identificador;
+inicio
+const Disciplina 11;
+caractere : Claudio[7], Breno[5];
+const trabalho 3;
+
+//
+
+//'Filosofia'
+
+/*identificadorInicial
+
+Aqui vem o corpo do programa
+
+nao esta dando erro porque o sintatico
+esta incompleto
+
+identificadorFinal*/
+
+fim.

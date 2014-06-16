@@ -1,0 +1,33 @@
+/*
+	Compilador 
+*/
+programa ProgramaDeTeste;
+inicio
+	const Desenvolvedor1 'Breno Cruz';
+	const Desenvolvedor2 'Claudio Mota';
+	inteiro : entrada, iterador, opcao;
+	
+	iterador <- 0;
+	opcao <- 0;
+	
+	escreva('Olá mundo\n');
+	escreva('Qual opercao deseja fazer?\n');
+	leia(opcao);
+	
+	avalie ((opcao*2 -2)/2)
+		caso 0:
+			repita
+				escreva('i = ');
+				escreva(iterador);
+				escreva('\n');
+			ate (iterador == 20);
+		caso 1:
+			para iterador de 1 ate 20 faca
+				
+			fim para;
+		caso 2:
+		
+		caso 3:
+		
+	fim avalie;
+fim.

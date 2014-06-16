@@ -20,7 +20,7 @@ Tokens
 {normal} caractere = 'caractere';
 {normal} real = 'real';
 {normal} inteiro = 'inteiro';
-{normal} string = '''tudo''';
+{normal} string = '''[tudo-''']*''';
 
 {normal} pontovirgula = ';';
 {normal} doispontos = ':';
@@ -72,7 +72,7 @@ Tokens
 
 {normal} comentarioemlinha = hcomentario;
 {normal} lf = 10;
-{normal} espaco = ' '+;
+{normal} espaco = ' '+ | '	';
 {normal} cr = 13;
 
 {normal->comentado, comentado} comentado = '/*';
@@ -88,7 +88,7 @@ comentarioemlinha,
 cr,
 comentado;
 
-Productions
+Productions 
 
 total = 
 programa identificador pontovirgula
@@ -97,11 +97,11 @@ super_declaracao_variavel
 corpo_programa
 fim ponto;
 
-
-variabilidade = {normal} | const;
 super_declaracao_variavel = super_declaracao_variavel declaracao_variavel | {vazio};
-declaracao_variavel = {conjunto} tipo doispontos declaracao_variavel_virgula variabilidade variavel pontovirgula | tipo doispontos variabilidade variavel pontovirgula;
-declaracao_variavel_virgula = {encadeamento}declaracao_variavel_virgula variabilidade variavel virgula| variabilidade variavel virgula;
+declaracao_variavel = {conjunto} tipo doispontos declaracao_variavel_virgula variavel pontovirgula |{dconstante}const identificador valor pontovirgula |tipo doispontos variavel pontovirgula;
+declaracao_variavel_virgula = {encadeamento}declaracao_variavel_virgula variavel virgula| variavel virgula;
 variavel = identificador | {vetor}identificador abrecolchete numero fecharcolchete;
 corpo_programa = corpo_programa identificador | {vazio};
 tipo = {c} caractere | {i} inteiro | real;
+valor = {tipo1} string | numero; 
+

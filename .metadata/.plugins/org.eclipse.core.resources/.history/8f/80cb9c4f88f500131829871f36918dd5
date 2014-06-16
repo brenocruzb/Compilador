@@ -1,0 +1,41 @@
+/*
+	Compilador 
+*/
+programa ProgramaDeTeste;
+inicio
+	const Desenvolvedor1 'Breno Cruz';
+	const Desenvolvedor2 'Claudio Mota';
+	inteiro : entrada, iterador, opcao;
+	
+	iterador <- 0;
+	opcao <- 0;
+	
+	escreva('Olá mundo\n');
+	escreva('Qual opercao deseja fazer?\n');
+	leia(opcao);
+	
+	avalie ((opcao*2 -2)/2)
+		caso 0:
+			iterador <- 1;
+			repita
+				escreva('i = ');
+				escreva(iterador);
+				escreva('\n');
+				iterador <- iterador + 1;
+			ate (iterador == 20);
+		caso 1:
+			para iterador de 1 ate 20 faca
+				escreva('i = ');
+				escreva(iterador);
+				escreva('\n');
+			fim para;
+		caso 2:
+			'enquanto' '(' exp-logica ')' 'faca' {comando ';'} comando ';' 'fim 
+enquanto' ';'
+			enquanto (iterador*(3*i-2) <= 40*iterador) faca
+				iterador <- iterador*2;
+			fim enquanto;
+		caso 3:
+		
+	fim avalie;
+fim.

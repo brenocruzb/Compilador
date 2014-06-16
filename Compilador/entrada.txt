@@ -1,15 +1,40 @@
-programa identificador;
+/*
+	Compilador 
+*/
+programa ProgramaDeTeste;
 inicio
-caractere : Claudio[7], Breno[5];
-inteiro : const trabalho, tempo;
-
-/*identificadorInicial
-
-Aqui vem o corpo do programa
-
-nao esta dando erro porque o sintatico
-esta incompleto
-
-identificadorFinal*/
-
+	const Desenvolvedor1 'Breno Cruz';
+	const Desenvolvedor2 'Claudio Mota';
+	inteiro : iterador, opcao;
+	
+	iterador <- 0;
+	opcao <- 0;
+	
+	escreva('Olá mundo\n');
+	escreva('Qual opercao deseja fazer?\n');
+	leia(opcao);
+	
+	avalie ((opcao*2 -2)/2)
+		caso 0:
+			iterador <- 1;
+			repita
+				escreva('i = ');
+				escreva(iterador);
+				escreva('\n');
+				iterador <- iterador + 1;
+			ate (iterador == 20);
+		caso 1:
+			para iterador de 1 ate 20 faca
+				escreva('i = ');
+				escreva(iterador);
+				escreva('\n');
+			fim para;
+		caso 2:
+			enquanto (iterador*(3*i-2) <= 40*iterador) faca
+				escreva(iterador);
+				iterador <- iterador*2;
+			fim enquanto;
+		caso 3:
+		
+	fim avalie;
 fim.

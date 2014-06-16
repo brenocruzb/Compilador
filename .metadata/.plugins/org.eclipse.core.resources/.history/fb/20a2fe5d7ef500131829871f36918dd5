@@ -1,0 +1,10 @@
+programa identificador;
+inicio
+	const trabalho 'estudante';
+	caractere : Claudio[7], Breno[5];
+	inteiro : const trabalho 5, tempo;
+	
+	
+	enquanto
+	
+fim.
