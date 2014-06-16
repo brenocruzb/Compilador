@@ -12,7 +12,7 @@ normal, comentado;
 
 
 Tokens
-{normal} soma = '+';
+{normal} adicao = '+';
 {normal} subtracao = '-';
 {normal} multiplicacao = '*';
 {normal} divisao = '/';
@@ -101,7 +101,18 @@ super_declaracao_variavel = super_declaracao_variavel declaracao_variavel | {vaz
 declaracao_variavel = {conjunto} tipo doispontos declaracao_variavel_virgula variavel pontovirgula |{dconstante}const identificador valor pontovirgula |tipo doispontos variavel pontovirgula;
 declaracao_variavel_virgula = {encadeamento}declaracao_variavel_virgula variavel virgula| variavel virgula;
 variavel = identificador | {vetor}identificador abrecolchete numero fecharcolchete;
-corpo_programa = corpo_programa identificador | {vazio};
+corpo_programa = exp_logica pontovirgula | {vazio};
 tipo = {c} caractere | {i} inteiro | real;
 valor = {tipo1} string | numero; 
+
+exp = exp soma termo |{term} termo;
+soma = adicao | {sub} subtracao;
+termo = termo mult fator | {fat} fator;
+mult = multiplicacao | {div} divisao;
+fator = abreparenteses exp fechaparenteses | {num} numero;
+
+exp_logica = expp_logica | {not} nao termo_logica;
+expp_logica = expp_logica simbolo_logica termo_logica | {term} termo_logica;
+simbolo_logica = {maq} maiorque | {meq} menorque | {ig} igual | {maig} maiorigual | {meig} menorigual | {dif} diferente | {e} e | {ou} ou | xor;
+termo_logica = exp;
 

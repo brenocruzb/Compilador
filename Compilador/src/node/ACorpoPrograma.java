@@ -7,8 +7,8 @@ import analysis.*;
 @SuppressWarnings("nls")
 public final class ACorpoPrograma extends PCorpoPrograma
 {
-    private PCorpoPrograma _corpoPrograma_;
-    private TIdentificador _identificador_;
+    private PExpLogica _expLogica_;
+    private TPontovirgula _pontovirgula_;
 
     public ACorpoPrograma()
     {
@@ -16,13 +16,13 @@ public final class ACorpoPrograma extends PCorpoPrograma
     }
 
     public ACorpoPrograma(
-        @SuppressWarnings("hiding") PCorpoPrograma _corpoPrograma_,
-        @SuppressWarnings("hiding") TIdentificador _identificador_)
+        @SuppressWarnings("hiding") PExpLogica _expLogica_,
+        @SuppressWarnings("hiding") TPontovirgula _pontovirgula_)
     {
         // Constructor
-        setCorpoPrograma(_corpoPrograma_);
+        setExpLogica(_expLogica_);
 
-        setIdentificador(_identificador_);
+        setPontovirgula(_pontovirgula_);
 
     }
 
@@ -30,8 +30,8 @@ public final class ACorpoPrograma extends PCorpoPrograma
     public Object clone()
     {
         return new ACorpoPrograma(
-            cloneNode(this._corpoPrograma_),
-            cloneNode(this._identificador_));
+            cloneNode(this._expLogica_),
+            cloneNode(this._pontovirgula_));
     }
 
     @Override
@@ -40,16 +40,16 @@ public final class ACorpoPrograma extends PCorpoPrograma
         ((Analysis) sw).caseACorpoPrograma(this);
     }
 
-    public PCorpoPrograma getCorpoPrograma()
+    public PExpLogica getExpLogica()
     {
-        return this._corpoPrograma_;
+        return this._expLogica_;
     }
 
-    public void setCorpoPrograma(PCorpoPrograma node)
+    public void setExpLogica(PExpLogica node)
     {
-        if(this._corpoPrograma_ != null)
+        if(this._expLogica_ != null)
         {
-            this._corpoPrograma_.parent(null);
+            this._expLogica_.parent(null);
         }
 
         if(node != null)
@@ -62,19 +62,19 @@ public final class ACorpoPrograma extends PCorpoPrograma
             node.parent(this);
         }
 
-        this._corpoPrograma_ = node;
+        this._expLogica_ = node;
     }
 
-    public TIdentificador getIdentificador()
+    public TPontovirgula getPontovirgula()
     {
-        return this._identificador_;
+        return this._pontovirgula_;
     }
 
-    public void setIdentificador(TIdentificador node)
+    public void setPontovirgula(TPontovirgula node)
     {
-        if(this._identificador_ != null)
+        if(this._pontovirgula_ != null)
         {
-            this._identificador_.parent(null);
+            this._pontovirgula_.parent(null);
         }
 
         if(node != null)
@@ -87,30 +87,30 @@ public final class ACorpoPrograma extends PCorpoPrograma
             node.parent(this);
         }
 
-        this._identificador_ = node;
+        this._pontovirgula_ = node;
     }
 
     @Override
     public String toString()
     {
         return ""
-            + toString(this._corpoPrograma_)
-            + toString(this._identificador_);
+            + toString(this._expLogica_)
+            + toString(this._pontovirgula_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._corpoPrograma_ == child)
+        if(this._expLogica_ == child)
         {
-            this._corpoPrograma_ = null;
+            this._expLogica_ = null;
             return;
         }
 
-        if(this._identificador_ == child)
+        if(this._pontovirgula_ == child)
         {
-            this._identificador_ = null;
+            this._pontovirgula_ = null;
             return;
         }
 
@@ -121,15 +121,15 @@ public final class ACorpoPrograma extends PCorpoPrograma
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._corpoPrograma_ == oldChild)
+        if(this._expLogica_ == oldChild)
         {
-            setCorpoPrograma((PCorpoPrograma) newChild);
+            setExpLogica((PExpLogica) newChild);
             return;
         }
 
-        if(this._identificador_ == oldChild)
+        if(this._pontovirgula_ == oldChild)
         {
-            setIdentificador((TIdentificador) newChild);
+            setPontovirgula((TPontovirgula) newChild);
             return;
         }
 
