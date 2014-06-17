@@ -37,7 +37,6 @@ Tokens
 {normal} inicio = 'inicio';
 {normal} fim = 'fim';
 {normal} ponto = '.';
-{normal} var = 'var';
 {normal} escreva = 'escreva';
 {normal} leia = 'leia';
 
@@ -68,6 +67,7 @@ Tokens
 {normal} abreparenteses = '(';
 {normal} fechaparenteses = ')';
 {normal} numero = digito+;
+{normal} numero_real = digito+'.'digito+;
 {normal} identificador = simbolo (simbolo|digito)*;
 
 {normal} comentarioemlinha = hcomentario;
@@ -98,21 +98,26 @@ corpo_programa
 fim ponto;
 
 super_declaracao_variavel = super_declaracao_variavel declaracao_variavel | {vazio};
-declaracao_variavel = {conjunto} tipo doispontos declaracao_variavel_virgula variavel pontovirgula |{dconstante}const identificador valor pontovirgula |tipo doispontos variavel pontovirgula;
-declaracao_variavel_virgula = {encadeamento}declaracao_variavel_virgula variavel virgula| variavel virgula;
-variavel = identificador | {vetor}identificador abrecolchete numero fecharcolchete;
-corpo_programa = exp_logica pontovirgula | {vazio};
+declaracao_variavel = {conjunto} tipo doispontos declaracao_variavel_virgula variaveld pontovirgula |{dconstante}const identificador valor pontovirgula |tipo doispontos variaveld pontovirgula;
+declaracao_variavel_virgula = {encadeamento}declaracao_variavel_virgula variaveld virgula| variaveld virgula;
+variaveld = identificador | {vetor}identificador abrecolchete numero fecharcolchete;
+corpo_programa = comando_se | {exp} exp_logica pontovirgula| {vazio};
 tipo = {c} caractere | {i} inteiro | real;
-valor = {tipo1} string | numero; 
+valor = {str} string | {num} numero | real; 
 
 exp = exp soma termo |{term} termo;
 soma = adicao | {sub} subtracao;
 termo = termo mult fator | {fat} fator;
 mult = multiplicacao | {div} divisao;
-fator = abreparenteses exp fechaparenteses | {num} numero;
+fator = abreparenteses exp fechaparenteses | {num} numero | {ind} identificador;
 
-exp_logica = expp_logica | {not} nao termo_logica;
-expp_logica = expp_logica simbolo_logica termo_logica | {term} termo_logica;
+
+exp_logica = expp_logica | {not} nao exp_logica;
+expp_logica = expp_logica simbolo_logica termo_logica | {termo} termo_logica;	
 simbolo_logica = {maq} maiorque | {meq} menorque | {ig} igual | {maig} maiorigual | {meig} menorigual | {dif} diferente | {e} e | {ou} ou | xor;
 termo_logica = exp;
 
+
+comando_se = se abreparenteses exp_logica fechaparenteses entao corpo_programa fimse pontovirgula | 
+     {se_nao} se abreparenteses exp_logica fechaparenteses entao corpo_programa comando_senao;
+     comando_senao = senao corpo_programa fimse pontovirgula;  

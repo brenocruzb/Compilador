@@ -14,7 +14,12 @@ inicio
 	escreva('Qual opercao deseja fazer?\n');
 	leia(opcao);*/
 	
-	2*(3+4) < 2;
+	se ((4+3) > (4-2)) entao 
+		se (3=4) entao
+		senao
+		fim se;
+	
+	 senao fim se;
 		
 	
 	/*avalie ((opcao*2 -2)/2)

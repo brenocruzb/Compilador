@@ -20,7 +20,9 @@ public class Main {
         	while(true)
         	{
         		try
-        		{
+        		
+        		{        			
+        		
         			Token tok = lexer.next();
         			String nome_token = tok.getClass().getName().substring(6);
         			System.out.print(nome_token+" ");
