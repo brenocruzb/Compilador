@@ -50,14 +50,13 @@ inicio
 			fim para;
 		caso 4:
 			leia(entrada[opcao]);
-			se (nao(entrada / (1+(opcao*entrada*entrada)) >= 1)) entao
-				
+			se (nao(entrada[opcao] / (1+(opcao*entrada[opcao]*entrada[opcao])) >= 1)) entao  // OUTRO EXEMPLO: se(nao(43 = 2))
+				escreva('se:...\n');
 			senao
-				
+				escreva('se nao:...\n');
 			fim se;
 		senao:
 			escreva('Opcao invalida!');
-			
 	fim avalie;
 
 	escreva('\nFim de execução...');
