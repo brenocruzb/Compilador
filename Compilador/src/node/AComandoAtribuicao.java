@@ -9,7 +9,7 @@ public final class AComandoAtribuicao extends PComandoAtribuicao
 {
     private PVar _var_;
     private TAtribuicao _atribuicao_;
-    private PExpLogica _expLogica_;
+    private PExp _exp_;
 
     public AComandoAtribuicao()
     {
@@ -19,14 +19,14 @@ public final class AComandoAtribuicao extends PComandoAtribuicao
     public AComandoAtribuicao(
         @SuppressWarnings("hiding") PVar _var_,
         @SuppressWarnings("hiding") TAtribuicao _atribuicao_,
-        @SuppressWarnings("hiding") PExpLogica _expLogica_)
+        @SuppressWarnings("hiding") PExp _exp_)
     {
         // Constructor
         setVar(_var_);
 
         setAtribuicao(_atribuicao_);
 
-        setExpLogica(_expLogica_);
+        setExp(_exp_);
 
     }
 
@@ -36,7 +36,7 @@ public final class AComandoAtribuicao extends PComandoAtribuicao
         return new AComandoAtribuicao(
             cloneNode(this._var_),
             cloneNode(this._atribuicao_),
-            cloneNode(this._expLogica_));
+            cloneNode(this._exp_));
     }
 
     @Override
@@ -95,16 +95,16 @@ public final class AComandoAtribuicao extends PComandoAtribuicao
         this._atribuicao_ = node;
     }
 
-    public PExpLogica getExpLogica()
+    public PExp getExp()
     {
-        return this._expLogica_;
+        return this._exp_;
     }
 
-    public void setExpLogica(PExpLogica node)
+    public void setExp(PExp node)
     {
-        if(this._expLogica_ != null)
+        if(this._exp_ != null)
         {
-            this._expLogica_.parent(null);
+            this._exp_.parent(null);
         }
 
         if(node != null)
@@ -117,7 +117,7 @@ public final class AComandoAtribuicao extends PComandoAtribuicao
             node.parent(this);
         }
 
-        this._expLogica_ = node;
+        this._exp_ = node;
     }
 
     @Override
@@ -126,7 +126,7 @@ public final class AComandoAtribuicao extends PComandoAtribuicao
         return ""
             + toString(this._var_)
             + toString(this._atribuicao_)
-            + toString(this._expLogica_);
+            + toString(this._exp_);
     }
 
     @Override
@@ -145,9 +145,9 @@ public final class AComandoAtribuicao extends PComandoAtribuicao
             return;
         }
 
-        if(this._expLogica_ == child)
+        if(this._exp_ == child)
         {
-            this._expLogica_ = null;
+            this._exp_ = null;
             return;
         }
 
@@ -170,9 +170,9 @@ public final class AComandoAtribuicao extends PComandoAtribuicao
             return;
         }
 
-        if(this._expLogica_ == oldChild)
+        if(this._exp_ == oldChild)
         {
-            setExpLogica((PExpLogica) newChild);
+            setExp((PExp) newChild);
             return;
         }
 

@@ -7,7 +7,7 @@ import analysis.*;
 @SuppressWarnings("nls")
 public final class AExpLogica extends PExpLogica
 {
-    private PExppLogica _exppLogica_;
+    private PLexp _lexp_;
 
     public AExpLogica()
     {
@@ -15,10 +15,10 @@ public final class AExpLogica extends PExpLogica
     }
 
     public AExpLogica(
-        @SuppressWarnings("hiding") PExppLogica _exppLogica_)
+        @SuppressWarnings("hiding") PLexp _lexp_)
     {
         // Constructor
-        setExppLogica(_exppLogica_);
+        setLexp(_lexp_);
 
     }
 
@@ -26,7 +26,7 @@ public final class AExpLogica extends PExpLogica
     public Object clone()
     {
         return new AExpLogica(
-            cloneNode(this._exppLogica_));
+            cloneNode(this._lexp_));
     }
 
     @Override
@@ -35,16 +35,16 @@ public final class AExpLogica extends PExpLogica
         ((Analysis) sw).caseAExpLogica(this);
     }
 
-    public PExppLogica getExppLogica()
+    public PLexp getLexp()
     {
-        return this._exppLogica_;
+        return this._lexp_;
     }
 
-    public void setExppLogica(PExppLogica node)
+    public void setLexp(PLexp node)
     {
-        if(this._exppLogica_ != null)
+        if(this._lexp_ != null)
         {
-            this._exppLogica_.parent(null);
+            this._lexp_.parent(null);
         }
 
         if(node != null)
@@ -57,23 +57,23 @@ public final class AExpLogica extends PExpLogica
             node.parent(this);
         }
 
-        this._exppLogica_ = node;
+        this._lexp_ = node;
     }
 
     @Override
     public String toString()
     {
         return ""
-            + toString(this._exppLogica_);
+            + toString(this._lexp_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._exppLogica_ == child)
+        if(this._lexp_ == child)
         {
-            this._exppLogica_ = null;
+            this._lexp_ = null;
             return;
         }
 
@@ -84,9 +84,9 @@ public final class AExpLogica extends PExpLogica
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._exppLogica_ == oldChild)
+        if(this._lexp_ == oldChild)
         {
-            setExppLogica((PExppLogica) newChild);
+            setLexp((PLexp) newChild);
             return;
         }
 

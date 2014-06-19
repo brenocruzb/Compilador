@@ -7,7 +7,7 @@ import analysis.*;
 @SuppressWarnings("nls")
 public final class AValor extends PValor
 {
-    private TReal _real_;
+    private TNumeroReal _numeroReal_;
 
     public AValor()
     {
@@ -15,10 +15,10 @@ public final class AValor extends PValor
     }
 
     public AValor(
-        @SuppressWarnings("hiding") TReal _real_)
+        @SuppressWarnings("hiding") TNumeroReal _numeroReal_)
     {
         // Constructor
-        setReal(_real_);
+        setNumeroReal(_numeroReal_);
 
     }
 
@@ -26,7 +26,7 @@ public final class AValor extends PValor
     public Object clone()
     {
         return new AValor(
-            cloneNode(this._real_));
+            cloneNode(this._numeroReal_));
     }
 
     @Override
@@ -35,16 +35,16 @@ public final class AValor extends PValor
         ((Analysis) sw).caseAValor(this);
     }
 
-    public TReal getReal()
+    public TNumeroReal getNumeroReal()
     {
-        return this._real_;
+        return this._numeroReal_;
     }
 
-    public void setReal(TReal node)
+    public void setNumeroReal(TNumeroReal node)
     {
-        if(this._real_ != null)
+        if(this._numeroReal_ != null)
         {
-            this._real_.parent(null);
+            this._numeroReal_.parent(null);
         }
 
         if(node != null)
@@ -57,23 +57,23 @@ public final class AValor extends PValor
             node.parent(this);
         }
 
-        this._real_ = node;
+        this._numeroReal_ = node;
     }
 
     @Override
     public String toString()
     {
         return ""
-            + toString(this._real_);
+            + toString(this._numeroReal_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._real_ == child)
+        if(this._numeroReal_ == child)
         {
-            this._real_ = null;
+            this._numeroReal_ = null;
             return;
         }
 
@@ -84,9 +84,9 @@ public final class AValor extends PValor
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._real_ == oldChild)
+        if(this._numeroReal_ == oldChild)
         {
-            setReal((TReal) newChild);
+            setNumeroReal((TNumeroReal) newChild);
             return;
         }
 

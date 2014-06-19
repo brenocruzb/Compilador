@@ -9,7 +9,7 @@ public final class AComandoEscrita extends PComandoEscrita
 {
     private TEscreva _escreva_;
     private TAbreparenteses _abreparenteses_;
-    private PExpLogica _expLogica_;
+    private PExp _exp_;
     private TFechaparenteses _fechaparenteses_;
 
     public AComandoEscrita()
@@ -20,7 +20,7 @@ public final class AComandoEscrita extends PComandoEscrita
     public AComandoEscrita(
         @SuppressWarnings("hiding") TEscreva _escreva_,
         @SuppressWarnings("hiding") TAbreparenteses _abreparenteses_,
-        @SuppressWarnings("hiding") PExpLogica _expLogica_,
+        @SuppressWarnings("hiding") PExp _exp_,
         @SuppressWarnings("hiding") TFechaparenteses _fechaparenteses_)
     {
         // Constructor
@@ -28,7 +28,7 @@ public final class AComandoEscrita extends PComandoEscrita
 
         setAbreparenteses(_abreparenteses_);
 
-        setExpLogica(_expLogica_);
+        setExp(_exp_);
 
         setFechaparenteses(_fechaparenteses_);
 
@@ -40,7 +40,7 @@ public final class AComandoEscrita extends PComandoEscrita
         return new AComandoEscrita(
             cloneNode(this._escreva_),
             cloneNode(this._abreparenteses_),
-            cloneNode(this._expLogica_),
+            cloneNode(this._exp_),
             cloneNode(this._fechaparenteses_));
     }
 
@@ -100,16 +100,16 @@ public final class AComandoEscrita extends PComandoEscrita
         this._abreparenteses_ = node;
     }
 
-    public PExpLogica getExpLogica()
+    public PExp getExp()
     {
-        return this._expLogica_;
+        return this._exp_;
     }
 
-    public void setExpLogica(PExpLogica node)
+    public void setExp(PExp node)
     {
-        if(this._expLogica_ != null)
+        if(this._exp_ != null)
         {
-            this._expLogica_.parent(null);
+            this._exp_.parent(null);
         }
 
         if(node != null)
@@ -122,7 +122,7 @@ public final class AComandoEscrita extends PComandoEscrita
             node.parent(this);
         }
 
-        this._expLogica_ = node;
+        this._exp_ = node;
     }
 
     public TFechaparenteses getFechaparenteses()
@@ -156,7 +156,7 @@ public final class AComandoEscrita extends PComandoEscrita
         return ""
             + toString(this._escreva_)
             + toString(this._abreparenteses_)
-            + toString(this._expLogica_)
+            + toString(this._exp_)
             + toString(this._fechaparenteses_);
     }
 
@@ -176,9 +176,9 @@ public final class AComandoEscrita extends PComandoEscrita
             return;
         }
 
-        if(this._expLogica_ == child)
+        if(this._exp_ == child)
         {
-            this._expLogica_ = null;
+            this._exp_ = null;
             return;
         }
 
@@ -207,9 +207,9 @@ public final class AComandoEscrita extends PComandoEscrita
             return;
         }
 
-        if(this._expLogica_ == oldChild)
+        if(this._exp_ == oldChild)
         {
-            setExpLogica((PExpLogica) newChild);
+            setExp((PExp) newChild);
             return;
         }
 

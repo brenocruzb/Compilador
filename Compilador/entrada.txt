@@ -12,10 +12,10 @@
 programa ProgramaDeTeste;
 inicio
 	const Desenvolvedor1 'Breno Cruz';
-	const Desenvolvedor2 'Claudio Mota';   // declaração de variáveis
+	const Desenvolvedor2 'Claudio Mota';
 	inteiro : iterador, opcao, entrada[5];
 	
-	iterador <- 0;     //inicialização
+	iterador <- 0;
 	opcao <- 0;
 	
 	escreva('Olá mundo\n');
@@ -50,7 +50,7 @@ inicio
 			fim para;
 		caso 4:
 			leia(entrada[opcao]);
-			se (entrada[opcao] = 2) entao         //AQUI TEM UM PROBLEMA DO EXPLOGICO, VEJA EM "entrada2.txt"
+			se (nao(entrada[opcao] / (1+(opcao*entrada[opcao]*entrada[opcao])) >= 1)) entao  // OUTRO EXEMPLO: se(nao(43 = 2))
 				escreva('se:...\n');
 			senao
 				escreva('se nao:...\n');

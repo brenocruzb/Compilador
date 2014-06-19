@@ -105,19 +105,25 @@ declaracao_variavel_virgula = {encadeamento}declaracao_variavel_virgula variavel
 variaveld = identificador | {vetor}identificador abrecolchete numero fecharcolchete;
 corpo_programa = comandos;
 tipo = {c} caractere | {i} inteiro | real;
-valor = {str} string | {num} numero | real; 
+valor = {str} string | {num} numero | numero_real; 
 
 exp = exp soma termo |{term} termo;
 soma = adicao | {sub} subtracao;
 termo = termo mult fator | {fat} fator;
 mult = multiplicacao | {div} divisao;
-fator = abreparenteses exp fechaparenteses | {num} numero | {variavel} var;
+fator = abreparenteses exp fechaparenteses | {num} numero | {real} numero_real | {variavel} var;
 
+parabool = lcomp | {menorig} menorigual | {maiorig} maiorigual | {menor} menorque |{maior} maiorque ;
+lcomp = igual |{nao} diferente;
+lsoma = ou;
+lmult = e | {xor}xor;
 
-exp_logica = expp_logica | {not} nao exp_logica;
-expp_logica = expp_logica simbolo_logica termo_logica | {termo} termo_logica;	
-simbolo_logica = {maq} maiorque | {meq} menorque | {ig} igual | {maig} maiorigual | {meig} menorigual | {dif} diferente | {e} e | {ou} ou | xor;
-termo_logica = exp;
+exp_logica = lexp;
+lexp = {igual} lexp lcomp lini | lini; 
+lini = {ou} lini lsoma ltermo | ltermo;
+ltermo = {enot} ltermo lmult lfator | {simples} lfator | ltermo lmult nao lfator |{negado} nao lfator;
+lfator = {parenteses} abreparenteses lexp fechaparenteses |{exp} exp parabool outraexp;// | var; // | taut;  
+outraexp = exp;
 
 comando_se = se abreparenteses exp_logica fechaparenteses entao comandos fimse| 
      {se_nao} se abreparenteses exp_logica fechaparenteses entao comandos comando_senao;
@@ -145,8 +151,9 @@ aparatipos = paratipos;
 bparatipos = paratipos;
 comando_para = para var de paratipos ate aparatipos faca comandos fimpara|
 	    {passo}para var de paratipos passo aparatipos ate bparatipos faca comandos fimpara;	   
-comando_escrita = escreva abreparenteses exp_logica fechaparenteses | 
-			 {str}escreva abreparenteses string fechaparenteses;
+comando_escrita = escreva abreparenteses exp fechaparenteses |
+            {bool}escreva abreparenteses exp_logica fechaparenteses | 
+	     {str}escreva abreparenteses string fechaparenteses;
 comando_leia = leia abreparenteses var fechaparenteses;
-comando_atribuicao = var atribuicao exp_logica;
+comando_atribuicao = var atribuicao exp;
      
