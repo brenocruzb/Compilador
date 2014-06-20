@@ -44,16 +44,23 @@ public class Main {
         		System.err.println("\n!!O executavel nao foi gerado pois houve erros de compilacao!!");
         	
         	lexer = new MyLexer (new PushbackReader(new FileReader(args[0]), 1024));
+        	MeuParser parser = new MeuParser(lexer);  
         	
-        	MeuParser parser = new MeuParser(lexer);
-            
-        	try
-        	{	
-        		Start ast = parser.parse() ; 
-        		System.out.println("Sintaticamente correto!!");
-        	}
-        	catch(Exception e){
-        		System.out.println("Erro sintatico!:"+Integer.toString(parser.getLine()));
+        	while(true){  
+        		if (lexer.next().getText() == ""){
+        			break;
+        		}
+        		try
+        		{	
+        			
+        			Start ast = parser.parse() ;         			
+        			System.out.println("Fim de análise sintática");        			
+        		}
+        		catch(Exception e){
+        			System.err.println("Erro sintatico!:"+e.getMessage());
+//        			lexer.next();
+        		}
+        		
         	}
             
   
@@ -62,7 +69,9 @@ public class Main {
             //ast.apply(interp) ; 
          } 
          catch (Exception e) { 
-            System.out.println (e) ; 
+
+        	 System.out.println (e);
+
          } 
       } else { 
          System.err.println("Nenhum arquivo foi dado como entrada"); 

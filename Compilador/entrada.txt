@@ -13,16 +13,13 @@ programa ProgramaDeTeste;
 inicio
 	const Desenvolvedor1 'Breno Cruz';
 	const Desenvolvedor2 'Claudio Mota';
-	inteiro : iterador, opcao, entrada[5];
-	
+	inteiro : iterador, opcao, entrada[5];		
 	iterador <- 0;
-	opcao <- 0;
-	
-	escreva('Olá mundo\n');
+	opcao <- 0;	
+	escreva('Olá mundo\n');	
 	escreva('Qual operacao deseja fazer?\n');
 	leia(opcao);
-	
-	avalie ((opcao*2 -2)/2)
+	avalie ((opcao*2 -2)/nao2)
 		caso 0:
 			iterador <- 1;
 			repita
@@ -37,7 +34,7 @@ inicio
 				escreva(iterador);
 				escreva('\n');
 			fim para;
-		caso 2:
+		caso 2:	
 			enquanto (iterador*(3*i-2) <= 50*iterador) faca
 				escreva(iterador);
 				iterador <- iterador*2;
@@ -52,7 +49,7 @@ inicio
 			leia(entrada[opcao]);
 			se (nao(entrada[opcao] / (1+(opcao*entrada[opcao]*entrada[opcao])) >= 1)) entao  // OUTRO EXEMPLO: se(nao(43 = 2))
 				escreva('se:...\n');
-			senao
+			senao			
 				escreva('se nao:...\n');
 			fim se;
 		senao:
