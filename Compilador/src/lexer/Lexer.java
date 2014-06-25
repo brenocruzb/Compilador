@@ -103,7 +103,7 @@ public class Lexer
                     }
                     else
                     {
-                        this.line++;
+                        //this.line++;
                         this.pos = 0;
                     }
                     break;

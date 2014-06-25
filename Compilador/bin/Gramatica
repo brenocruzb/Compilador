@@ -138,8 +138,15 @@ comandos = {leia} comandos comando_leia pontovirgula |
 		  {se} comandos comando_se pontovirgula|
 		  {atribuida} comandos comando_atribuicao pontovirgula |
 		  {para} comandos comando_para pontovirgula |
-		  //exp_logica pontovirgula|   // está dando erro de shift reduce
-		  {vazio};
+		  {base} comando;
+comando = {leia} comando_leia pontovirgula |
+		  {repita} comando_repita pontovirgula | 
+		  {enquanto} comando_enquanto pontovirgula |
+		  {avaliar} comando_avalie pontovirgula |
+		  {escrita} comando_escrita pontovirgula |
+		  {se} comando_se pontovirgula|
+		  {atribuida} comando_atribuicao pontovirgula |
+		  {para} comando_para pontovirgula;
 
 comando_repita = repita comandos ate abreparenteses exp_logica fechaparenteses; 
 comando_enquanto = enquanto abreparenteses exp_logica fechaparenteses faca comandos fimenquanto;
