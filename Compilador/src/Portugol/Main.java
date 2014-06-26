@@ -16,19 +16,18 @@ public class Main {
       if (args.length > 0) { 
          try { 
             /* Form our AST */ 
-        	MyLexer lexer = new MyLexer (new PushbackReader(new FileReader(args[0]), 1024));
+        	 
+        	MyLexer lexer = null;
+        	if(!args[0].isEmpty()){
+        		lexer = new MyLexer (new PushbackReader(new FileReader(args[0]), 1024));
+        	}else{
+        		lexer = new MyLexer (new PushbackReader(new FileReader("entrada.txt"), 1024));
+        	}
+
         	while(true)
         	{
-        		try
-        		
-        		{        			
-        		
+        		try{        			        		
         			Token tok = lexer.next();
-        			String nome_token = tok.getClass().getName().substring(6);
-        			//System.out.print(nome_token+" ");
-        			if(nome_token.equals("Lf"))
-//        			{System.out.println("");}
-        			{}
         			if(tok.getText() == "")
             			break;
         		}
@@ -52,8 +51,7 @@ public class Main {
         			break;
         		}
         		try
-        		{	
-        			
+        		{	        			
         			Start ast = parser.parse() ;         			
         			System.out.println("Fim de análise sintática");        			
         		}
