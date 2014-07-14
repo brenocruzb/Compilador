@@ -1,11 +1,16 @@
 package Portugol;
 
+import java.io.IOException;
+
 import lexer.Lexer;
+import lexer.LexerException;
 import lexer.Lexer.State;
 import node.*;
 
 public class MyLexer extends Lexer {
 	private int count;
+	public int desvio;
+	public int line;
 	private TComentado comment;
 	private StringBuffer text;
 	public boolean houveProblema = false;
@@ -16,6 +21,10 @@ public class MyLexer extends Lexer {
 	}
 	// We define a filter that recognizes nested comments.
 	protected void filter() { // if we are in the comment state
+		if(this.token.getClass().getName().substring(6).equals("Cr"))
+		{desvio++;
+		}
+		token.setLine(token.getLine() -desvio);
 		if (state.equals(State.COMENTADO)) { // if we are just entering this state
 			if (comment == null) { // The token is supposed to be a comment.
 									// We keep a reference to it and set the

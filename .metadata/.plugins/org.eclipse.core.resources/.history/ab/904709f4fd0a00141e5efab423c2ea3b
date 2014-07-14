@@ -1,0 +1,22 @@
+Helpers
+all = [ 0 .. 0xFFFF];
+digit = ['0' .. '9'];
+lowercase = ['a' .. 'z'];
+uppercase = ['A' .. 'Z'];
+alpha = [lowercase + uppercase];
+underscore = '_';
+dash = '-';
+extalpha = [[underscore + dash] + alpha];
+semicolon = ';';
+tab = 9;
+lf = 10;
+cr = 13;
+eol = cr lf | cr | lf;
+not_cr_lf = [all - [cr + lf]];
+Tokens
+ lbracket = '[';
+ rbracket = ']';
+ equal = '=';
+ 
+blank = (' ' | tab | lf | cr)+;
+name = (extalpha (extalpha | digit)*);

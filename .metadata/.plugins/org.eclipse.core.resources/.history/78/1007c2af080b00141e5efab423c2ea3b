@@ -1,0 +1,56 @@
+package Portugol;
+
+
+import lexer.* ; 
+import node.* ;
+import parser.*;
+
+import java.io.* ; 
+
+public class Main { 
+   public static void main(String[] args) { 
+      if (args.length > 0) { 
+         try { 
+        	MyLexer lexer = new MyLexer (new PushbackReader(new FileReader(args[0]), 1024));
+        	MeuParser parser = new MeuParser(lexer);  
+        	boolean erroSintatico = false;
+        	
+        	while(true){  
+        		if (lexer.next().getText() == ""){
+        			break;
+        		}
+        		try
+        		{	        			
+        			Start ast = parser.parse() ;         			
+        			if(!erroSintatico)
+        			System.out.println("Código sintáticamente correto!");        			
+        		}
+        		catch (LexerException e)
+        		{
+        			lexer.houveProblema = true;
+        			int x;
+        			x = e.getMessage().indexOf(":");
+        	        System.err.println ("Erro léxico: "+e.getMessage().substring(x)); 
+        		}
+        		catch(Exception e){
+        			if(!erroSintatico)
+        			{erroSintatico = true;
+        			 System.err.println("Erro sintático!:"+e.getMessage());
+        			}
+        		}
+        		
+        	}
+            
+  
+         } 
+         catch (Exception e) { 
+
+        	 System.out.println (e);
+
+         } 
+      } else { 
+         System.err.println("Nenhum arquivo foi dado como entrada"); 
+         System.exit(1); 
+      } 
+   } 
+}

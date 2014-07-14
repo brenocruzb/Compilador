@@ -1,0 +1,38 @@
+Helpers
+all = [ 0 .. 0xFFFF];
+digit = ['0' .. '9'];
+lowercase = ['a' .. 'z'];
+uppercase = ['A' .. 'Z'];
+alpha = [lowercase + uppercase];
+underscore = '_';
+dash = '-';
+extalpha = [[underscore + dash] + alpha];
+semicolon = ';';
+tab = 9;
+lf = 10;
+cr = 13;
+eol = cr lf | cr | lf;
+not_cr_lf = [all - [cr + lf]];
+Tokens
+ lbracket = '[';
+ rbracket = ']';
+ equal = '=';
+ 
+blank = (' ' | tab | lf | cr)+;
+name = (extalpha (extalpha | digit)*);comment = semicolon not_cr_lf* eol;
+Ignored Tokens
+blank,
+comment;
+Productions
+inidoc { -> inidoc_ast } = sections 
+ { -> New inidoc_ast([sections.ast_section]) };
+sections { -> ast_section* } = section*
+ { -> [section.ast_section] };
+section { -> ast_section } = lbracket name rbracket sectiondata* 
+ {-> New ast_section(name,[sectiondata.ast_data])};
+sectiondata { -> ast_data } = [key]:name equal [value]:name 
+ { -> New ast_data(key, value) };
+Abstract Syntax Tree
+inidoc_ast = ast_section*;
+ast_section = name ast_data*;
+ast_data = [key]:name [value]:name;

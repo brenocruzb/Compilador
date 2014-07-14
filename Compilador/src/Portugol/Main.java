@@ -1,64 +1,53 @@
 package Portugol;
 
-/* Create an AST, then invoke our interpreter. */ 
 
 import lexer.* ; 
 import node.* ;
 import parser.*;
-//import java.util.Scanner;
 
 import java.io.* ; 
 
-//import Portugol.Interpreter;
-  
 public class Main { 
    public static void main(String[] args) { 
       if (args.length > 0) { 
          try { 
-            /* Form our AST */ 
-        	 
         	MyLexer lexer = null;
-        	if(!args[0].isEmpty()){
-        		lexer = new MyLexer (new PushbackReader(new FileReader(args[0]), 1024));
-        	}else{
-        		lexer = new MyLexer (new PushbackReader(new FileReader("entrada.txt"), 1024));
-        	}
-
-        	while(true)
-        	{
-        		try{        			        		
-        			Token tok = lexer.next();
-        			if(tok.getText() == "")
-            			break;
-        		}
-        		catch (Exception e) 
-        		{ 
-        	        lexer.houveProblema = true;    
-        	        System.out.println ("Erro: "+e.getMessage()); 
-        	    }
-        	}
-        	if(!lexer.houveProblema)
-        		System.out.println("\ncódigo pertence a linguagem!!");
-        	else
-        		System.err.println("\n!!O executavel nao foi gerado pois houve erros de compilacao!!");
         	
-        	lexer = new MyLexer (new PushbackReader(new FileReader(args[0]), 1024));
+         	if(!args[0].isEmpty()){
+         		lexer = new MyLexer (new PushbackReader(new FileReader(args[0]), 1024));
+         	}else{
+         		lexer = new MyLexer (new PushbackReader(new FileReader("entrada.txt"), 1024));
+         	} 
+         	
         	MeuParser parser = new MeuParser(lexer);  
         	boolean erroSintatico = false;
         	
         	while(true){  
-        		if (lexer.next().getText() == ""){
-        			break;
-        		}
         		try
         		{	        			
+        			if (lexer.next().getText() == ""){
+            			break;
+            		}
         			Start ast = parser.parse() ;         			
-        			System.out.println("Fim de análise sintática");        			
+        			if(!erroSintatico)
+        			System.out.println("Código sintáticamente correto!");        			
+        		}
+        		catch (LexerException e)
+        		{
+        			erroSintatico = true;
+        			int a,b,c,d;
+        			String x,y,z;
+        			a = e.getMessage().indexOf(":");b = e.getMessage().indexOf("[");
+        			c = e.getMessage().indexOf(",");d = e.getMessage().indexOf("]");
+        			x = e.getMessage().substring(a+1, a+3);
+        			y = Integer.toString(Integer.parseInt(e.getMessage().substring(b+1,c))-lexer.desvio);
+        			z = Integer.toString(Integer.parseInt(e.getMessage().substring(c+1,d)));
+        			System.err.println ("Erro léxico token deconhecido "+"["+y+","+z+"]:"+x); 
         		}
         		catch(Exception e){
         			if(!erroSintatico)
         			{erroSintatico = true;
-        			 System.err.println("Erro sintatico!:"+e.getMessage());
+        			 System.err.println("Erro sintático!:"+e.getMessage());
         			}
         		}
         		
