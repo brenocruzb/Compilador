@@ -1,0 +1,191 @@
+Helpers
+tudo = [0..0xffff];
+digito = ['0' .. '9'];
+letra = ['a' .. 'z'] | ['A' .. 'Z'];
+under = '_';
+simbolo = letra | under;
+hcomentario = '/''/' [tudo-10]* (10);
+
+//-------------------------------------------------
+// Expressoes dos Tokens
+//-------------------------------------------------
+
+States
+normal, comentado;
+
+Tokens
+{normal} adicao = '+';
+{normal} subtracao = '-';
+{normal} multiplicacao = '*';
+{normal} divisao = '/';
+
+{normal} caractere = 'caractere';
+{normal} real = 'real';
+{normal} inteiro = 'inteiro';
+{normal} string = '''[tudo-''']*''';
+
+{normal} pontovirgula = ';';
+{normal} doispontos = ':';
+{normal} maiorque = '>';
+{normal} menorque = '<';
+{normal} igual = '=';
+{normal} maiorigual = '>=';
+{normal} menorigual = '<=';
+{normal} diferente = '<>';
+{normal} atribuicao = '<-';
+
+{normal} const = 'const';
+{normal} programa = 'programa';
+{normal} inicio = 'inicio';
+{normal} fimponto = 'fim.';
+{normal} ponto = '.';
+{normal} escreva = 'escreva';
+{normal} leia = 'leia';
+
+{normal} se = 'se';
+{normal} entao = 'entao';
+{normal} senao = 'senao';
+{normal} fimse = 'fim se';
+{normal} aspa = ''';
+{normal} repita = 'repita';
+{normal} enquanto = 'enquanto';
+{normal} fimenquanto = 'fim enquanto';
+{normal} para = 'para';
+{normal} de = 'de';
+{normal} ate = 'ate';
+{normal} faca = 'faca';
+{normal} fimpara = 'fim para';
+{normal} passo = 'passo';
+{normal} avalie = 'avalie';
+{normal} caso = 'caso';
+{normal} fimavalie = 'fim avalie';
+
+{normal} abrecolchete = '[';
+{normal} fecharcolchete = ']';
+
+{normal} e = 'e';
+{normal} ou = 'ou';
+{normal} xor = 'xor';
+{normal} nao = 'nao';
+{normal} virgula = ',';
+{normal} abreparenteses = '(';
+{normal} fechaparenteses = ')';
+{normal} numero = digito+;
+{normal} numero_real = digito+','digito+;
+{normal} identificador = simbolo (simbolo|digito)*;
+
+{normal} comentarioemlinha = hcomentario;
+{normal} lf = 10;
+{normal} espaco = ' '+ | '	'+;
+{normal} cr = 13;
+
+{normal->comentado, comentado} comentado = '/*';
+{comentado} comentadofinal = '*/';
+{comentado} corpo = [tudo -['*' + '/']]*;
+{comentado} estrela = '*';
+{comentado} barra = '/';
+
+Ignored Tokens
+lf,
+espaco,
+comentarioemlinha,
+cr,
+comentado;
+
+//-------------------------------------------------
+// Gramatica da Sintaxe
+//-------------------------------------------------
+
+Productions 
+
+total = 
+programa identificador pontovirgula
+inicio
+super_declaracao_variavel
+corpo_programa
+fimponto	{-> New total(identificador,[super_declaracao_variavel],[corpo_programa.comandos])};
+
+//declaracao de variaveis e corpo do programa---------------------
+
+super_declaracao_variavel{-> declaracao_variavel*}  = declaracao_variavel* {-> [declaracao_vairiavel]};
+declaracao_variavel = {conjunto} tipo doispontos declaracao_variavel_virgula variaveld pontovirgula {-> New declaracao_variavel.conjunto(tipo,[declaracao_variavel_virgula.declaracao_variavel])}
+					  |{dconstante}const identificador valor pontovirgula |tipo doispontos variaveld pontovirgula;
+declaracao_variavel_virgula {declaracao_variavel*}  = {encadeamento}declaracao_variavel_virgula variaveld virgula {} 
+													 | variaveld virgula {->New declaracao_variavel_virgula(variaveld)};
+variaveld = identificador | {vetor}identificador abrecolchete numero fecharcolchete;
+
+corpo_programa {-> comandos*} = comandos+ {-> New corpo_programa([comandos])};
+tipo = {caractere} caractere | {inteiro} inteiro |{real} real;
+valor = {string} string | {numero} numero |{real} numero_real; 
+
+expr = expnum {-> New expr(expnum)} 
+	 | {logica} exp_logica {-> New expr.logica(expl)};
+
+//expressao numerica----------------------------------------------
+
+expnum = expnum soma termo |{a} expnum |{term} termo;
+soma = adicao | {sub} subtracao;
+termo = termo mult fator | {fat} fator;
+mult = multiplicacao | {div} divisao;
+fator = abreparenteses expnum fechaparenteses| {negativo} subtracao fator| {num} numero | {real} numero_real | {variavel} var;
+
+//operacoes logicas-----------------------------------------------
+//pela pesquisa que fizemos 'XOR' tem precedencia entre 'E' e 'OU'
+
+parabool = {menorig} menorigual | {maiorig} maiorigual | {menor} menorque |{maior} maiorque;
+lcomp = igual |{nao} diferente;
+lsoma = ou;
+lmult = e; 
+lxor = xor;
+
+exp_logica = naoigualfator lcomp rnaoigualfator | {direto}linicio;
+rnaoigualfator = naoigualfator;
+naoigualfator = {parenteses} abreparenteses exp_logica fechaparenteses |{exp} expnum parabool outraexp|{nao} nao lfator;
+
+linicio = {cadeia}linicio lsoma lmeio | lmeio;
+lmeio = {cadeia}lmeio lxor ltermo | ltermo;
+ltermo = {cadeia}ltermo lmult lfator | lfator;
+lfator = {parenteses} abreparenteses exp_logica fechaparenteses |
+		 {exp} expnum parabool outraexp|{expig} expnum lcomp outraexp|{nao} nao lfator;
+
+outraexp = expnum;
+//comandos----------------------------------------------------
+
+comando_se = se abreparenteses exp_logica fechaparenteses entao comandos fimse| 
+     {se_nao} se abreparenteses exp_logica fechaparenteses entao comandos comando_senao;
+comando_senao = senao comandos fimse;  
+     
+var = identificador | {vetor} identificador abrecolchete expnum fecharcolchete;
+
+comandos = {leia} comando_leia pontovirgula {-> New comandos.leia(comando_leia)}|
+		   {repita} comando_repita pontovirgula {-> New comandos.repita(comando_repita)}| 
+		   {enquanto} comando_enquanto pontovirgula {-> New comandos.enquanto(comando_enquanto)}|
+		   {avaliar} comando_avalie pontovirgula {-> New comandos.comando_avalie(comando_avalie)}|
+		   {escrita} comando_escrita pontovirgula {-> New comandos.escrita(comando_escrita)}|
+		   {se} comando_se pontovirgula {-> New comandos.se(comando_se)}|
+		   {atribuicao} comando_atribuicao pontovirgula {-> New comandos.atribuicao(comando_atribuicao)}|
+		   {para} comando_para pontovirgula {-> New comandos.para(comando_para)};
+
+comando_repita = repita comandos ate abreparenteses exp_logica fechaparenteses; 
+comando_enquanto = enquanto abreparenteses exp_logica fechaparenteses faca comandos fimenquanto;
+casos = casos caso valor doispontos comandos | {vazio};
+avsenao = senao doispontos comandos | {vazio};
+comando_avalie = avalie abreparenteses expr fechaparenteses caso valor doispontos comandos casos avsenao fimavalie;
+paratipos = numero | {var}var;
+aparatipos = paratipos;
+bparatipos = paratipos;
+comando_para = para var de paratipos ate aparatipos faca comandos fimpara|
+	    {passo}para var de paratipos passo aparatipos ate bparatipos faca comandos fimpara;	   
+comando_escrita = escreva abreparenteses expr fechaparenteses |
+	     	 {str}escreva abreparenteses string fechaparenteses;
+comando_leia = leia abreparenteses var fechaparenteses;
+comando_atribuicao = var atribuicao expnum;
+
+//-------------------------------------------------
+// Arvore de Sintaxe Abstrata
+//-------------------------------------------------
+
+Abstract Syntax Tree
+
+total = identificador super_declaracao_variavel comandos*;
+

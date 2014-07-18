@@ -1,0 +1,13 @@
+package Portugol;
+
+import java.io.IOException;
+
+import lexer.Lexer;
+import lexer.LexerException;
+import lexer.Lexer.State;
+import node.*;
+
+public class MyLexer extends Lexer {
+	MyLexer()
+	{}
+}
