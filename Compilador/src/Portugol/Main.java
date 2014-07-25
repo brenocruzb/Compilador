@@ -28,7 +28,8 @@ public class Main {
         			if (lexer.next().getText() == ""){
             			break;
             		}
-        			Start ast = parser.parse() ;         			
+        			Start ast = parser.parse() ;   
+        			ast.toString();
         			if(!erroSintatico)
         			System.out.println("Código sintáticamente correto!");        			
         		}
@@ -52,8 +53,7 @@ public class Main {
         		}
         		
         	}
-            
-  
+
          } 
          catch (Exception e) { 
 
