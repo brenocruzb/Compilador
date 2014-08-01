@@ -1,0 +1,6 @@
+package Semantica;
+
+public class Simbolo {
+	int tipo
+
+}

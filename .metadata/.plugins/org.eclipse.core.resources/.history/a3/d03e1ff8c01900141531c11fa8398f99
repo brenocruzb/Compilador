@@ -1,0 +1,23 @@
+package Semantica;
+
+public class Simbolo {
+	String tipo;
+	int tamanho;
+	Object valor;
+	
+	public String getTipo() {
+		return tipo;
+	}
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+	public Object getValor() {
+		return valor;
+	}
+	public void setValor(Object valor) {
+		this.valor = valor;
+	}
+
+	
+
+}

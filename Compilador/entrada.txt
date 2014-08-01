@@ -14,9 +14,12 @@ inicio
 	const Desenvolvedor1 'Breno Cruz';
 	const Desenvolvedor2 'Claudio Mota';
 	const numeroReal 2,25;
-	inteiro : iterador, opcao, entrada[5];		
+	inteiro : iterador, opcao, ultimo, entrada[5];
+	real: numeroReal2;		
 	
-	iterador <- 0;
+	inteiro: ProgramaDeTeste;
+	
+	iterador <- entrada[0]*Desenvolvedor*2*2,5;
 	opcao <- 0;
 	se (2 = 3) entao escreva('nada'); fim se;
 	escreva('Olá mundo\n');	

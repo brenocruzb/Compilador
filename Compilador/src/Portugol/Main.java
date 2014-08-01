@@ -7,6 +7,8 @@ import parser.*;
 
 import java.io.* ; 
 
+import Semantica.*;
+
 public class Main { 
    public static void main(String[] args) { 
       if (args.length > 0) { 
@@ -28,10 +30,13 @@ public class Main {
         			if (lexer.next().getText() == ""){
             			break;
             		}
-        			Start ast = parser.parse() ;   
+        			Start ast = parser.parse() ;
         			ast.toString();
         			if(!erroSintatico)
-        			System.out.println("Código sintáticamente correto!");        			
+        			{	System.out.println("Código sintáticamente correto!");
+        				Semantico semantica = new Semantico();
+        				ast.apply(semantica);
+        			}
         		}
         		catch (LexerException e)
         		{
