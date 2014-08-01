@@ -8,4 +8,12 @@
 <fullyQualifiedTypeName name="node.Token"/>
 <fullyQualifiedTypeName name="lexer.Lexer"/>
 <fullyQualifiedTypeName name="parser.Parser"/>
+<fullyQualifiedTypeName name="Semantica.STotal"/>
+<fullyQualifiedTypeName name="javax.xml.soap.Node"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="java.lang.Class"/>
+<fullyQualifiedTypeName name="java.lang.SuppressWarnings"/>
+<fullyQualifiedTypeName name="analysis.DepthFirstAdapter"/>
+<fullyQualifiedTypeName name="java.util.LinkedList"/>
 </qualifiedTypeNameHistroy>
