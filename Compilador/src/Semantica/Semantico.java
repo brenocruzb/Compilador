@@ -35,7 +35,7 @@ public class Semantico extends DepthFirstAdapter {
 			}
 			else
 			{	sim.setTipo("inteiro");
-			 	sim.setValor(Integer.parseInt(valor));
+				sim.setValor(Integer.parseInt(valor));
 			}
 		}
 		return sim;
@@ -46,7 +46,7 @@ public class Semantico extends DepthFirstAdapter {
 		// TODO Auto-generated method stub
 		super.outStart(node);
 	}
-
+	
 	@Override
 	public void outATotal(ATotal node) {
 		// TODO Auto-generated method stub
@@ -104,7 +104,7 @@ public class Semantico extends DepthFirstAdapter {
 				if(tabelaSimbolos.containsKey(nome))
 		        {	System.err.println("Erro semantico: variavel já declarada ["+Integer.toString(token.getLine())+
 		        		","+Integer.toString(token.getPos())+"]");}
-		        else
+				else
 		        {
 		        	Simbolo simbolo = new Simbolo();
 		        	simbolo.setTipo(tipo);
@@ -137,276 +137,237 @@ public class Semantico extends DepthFirstAdapter {
 		super.outAVariavelDeclaracaoVariavel(node);
 	}
 
-	@Override
-	public void outACaractereTipo(ACaractereTipo node) {
-		// TODO Auto-generated method stub
-		super.outACaractereTipo(node);
-	}
-
-	@Override
-	public void outAInteiroTipo(AInteiroTipo node) {
-		// TODO Auto-generated method stub
-		super.outAInteiroTipo(node);
-	}
-
-	@Override
-	public void outARealTipo(ARealTipo node) {
-		// TODO Auto-generated method stub
-		super.outARealTipo(node);
-	}
-
-	@Override
-	public void outAStringValor(AStringValor node) {
-		// TODO Auto-generated method stub
-		super.outAStringValor(node);
-	}
-
-	@Override
-	public void outANumeroValor(ANumeroValor node) {
-		// TODO Auto-generated method stub
-		super.outANumeroValor(node);
-	}
-
-	@Override
-	public void outARealValor(ARealValor node) {
-		// TODO Auto-generated method stub
-		super.outARealValor(node);
-	}
-
 	
-	@Override
-	public void outAOperacaoExpr(AOperacaoExpr node){
-		OperacaoExpr(node);
-	}
-	
-	public String OperacaoExpr(AOperacaoExpr node) {
+	public String OperacaoExpr(Node no) {
 		// TODO Auto-generated method stub
-		PExpr esquerda = node.getPrimeiro();		
-		String resul_esq = "";
-		switch(esquerda.getClass().toString())
-		{
+		String ret = "ERRO";
+		//AVariavelExpr node = (AVariavelExpr)no;
+		switch(no.getClass().toString()){
 			case "class node.AOperacaoExpr":			
-				 resul_esq = OperacaoExpr((AOperacaoExpr) esquerda);				 
+				String resul_esq;
+				PExpr esquerda = ((AOperacaoExpr)no).getPrimeiro();
+				String resul_dir;
+				PExpr direita = ((AOperacaoExpr)no).getSegundo();
+				resul_esq = OperacaoExpr((Node) esquerda);	
+				resul_dir = OperacaoExpr((Node) direita);
+				
+				// "inteiro" "real" "caractere" "ERRO"
+				
+				if(resul_esq == "caractere" || resul_dir == "caractere"){
+					System.err.println("Erro semantico: operações aritmeticas com caracteres não são permitidas,");
+					ret = "ERRO";
+				}
+				else if(resul_esq == resul_dir){
+					ret = resul_esq;
+				}
+				else if(resul_esq == "real" || resul_dir == "real"){
+					ret = "real";
+				}else{
+					ret = "inteiro";
+				}
+			break;
+			
+			case "class node.AInternoExpr":
+				ret = OperacaoExpr(((AInternoExpr)no).getExpr());
+			break;
+			
+			case "class node.ANegativoExpr":
+				ret = OperacaoExpr(((ANegativoExpr)no).getExpr());
+				if(ret == "caractere")
+				{	ret = "ERRO";
+					System.err.println("Erro semantico: operações aritmeticas com caracteres não são permitidas,");
+				}
 			break;
 			
 			case "class node.ANumeroExpr":			
-				 resul_esq = "inteiro";
+				ret = "inteiro";
 			break;
-			
+		
 			case "class node.ARealExpr":				
-				 resul_esq = "real";
-			  break;
-			
-			case "class node.AVariavelExpr":
-				System.err.println(("AQUI "+((AVariavelExpr)esquerda).getVar().getClass().toString()).toUpperCase());								
-				switch(((AVariavelExpr)esquerda).getVar().getClass().toString())
-				 {
-				  	case "class node.AIdVar":				  		
-						 AIdVar variavel = (AIdVar) ((AVariavelExpr)esquerda).getVar();									
-						 Simbolo sim = tabelaSimbolos.get(variavel.getIdentificador().getText());					
-						 if(sim.getTipo()!=null)
+				ret = "real";
+			break;
+		
+			case "class node.AVariavelExpr":						
+			switch(((AVariavelExpr)no).getVar().getClass().toString())
+			 {
+			  	case "class node.AIdVar":				  		
+					 AIdVar variavel = (AIdVar) ((AVariavelExpr)no).getVar();									
+					 Simbolo sim = tabelaSimbolos.get(variavel.getIdentificador().getText());					
+					 if(sim!=null)
+					 {
+					     if(sim.getTamanho() != -15328 && sim.getTipo() != "caractere")
 						 {
-							 resul_esq = sim.getTipo();							
-						 }else
-						 {
-							 System.err.println("Erro semantico: variável não declarada ["+Integer.toString(variavel.getIdentificador().getLine())+
-						        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+							 System.err.println("Erro semantico: posicao do vetor nao especificada: \'"+variavel.getIdentificador().getText()+"\' ["+
+								 		Integer.toString(variavel.getIdentificador().getLine())+
+					        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
 						 }
+						 return sim.getTipo();							
+					 }else
+					 {
+						 System.err.println("Erro semantico: variável não declarada \'"+variavel.getIdentificador().getText()+"\' ["+
+							 		Integer.toString(variavel.getIdentificador().getLine())+
+				        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+					 }
+				 
+				break;
+			  	case "class node.AVetorVar":				
+			  		 AVetorVar variavel2 = (AVetorVar) ((AVariavelExpr)no).getVar();				  	
+					 sim = tabelaSimbolos.get(variavel2.getIdentificador().getText());
+					 if(OperacaoExpr((Node)variavel2.getExpr()) != "inteiro")
+					 {
+						 System.err.println("Erro semantico: enderenço do vetor não é inteiro \'"+variavel2.getIdentificador().getText()+"\' ["+
+							 		Integer.toString(variavel2.getIdentificador().getLine())+
+				        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+					 }
+					 if(sim!=null)
+					 {
+						 if(sim.getTipo()=="caractere")
+						 {
+							 System.err.println("Erro semantico: Operação não autorizada para variaveis do tipo caractere, \'"+variavel2.getIdentificador().getText()+"\' ["+
+										 		Integer.toString(variavel2.getIdentificador().getLine())+
+							        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+						 }else if(sim.getTamanho() == -15328)
+						 {
+							 System.err.println("Erro semantico: não é um vetor: \'"+variavel2.getIdentificador().getText()+"\' ["+
+								 		Integer.toString(variavel2.getIdentificador().getLine())+
+					        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+						 }
+						 return sim.getTipo();
+					 }else
+					 {
+						 System.err.println("Erro semantico: variável não declarada \'"+variavel2.getIdentificador().getText()+"\' ["+
+								 		Integer.toString(variavel2.getIdentificador().getLine())+
+					        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+					 }
 					 
-					 break;
-				  	case "class node.AVetorVar":				
-				  		 AVetorVar variavel2 = (AVetorVar) ((AVariavelExpr)esquerda).getVar();				  	
-						 sim = tabelaSimbolos.get(variavel2.getIdentificador().getText());						
-						 if(sim.getTipo()!=null)
-						 {
-							 resul_esq = sim.getTipo();
-						 }else
-						 {
-							 System.err.println("Erro semantico: variável não declarada ["+Integer.toString(variavel2.getIdentificador().getLine())+
-						        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
-						 }
-						 
-				  	break;
-				 }
+			  	break;
+			 }
+			break;
+			default://case "class node.AOperacaologicaExpr":
+				ret = OperacaologicaExpr(no);
 			break;
 		}
-		PExpr direita = node.getSegundo();
-		super.outAOperacaoExpr(node);
-		return resul_esq;
+		return ret;
 	}
-
+//-------------------------------------------------
 	@Override
-	public void outAOperacaologicaExpr(AOperacaologicaExpr node) {
-		// TODO Auto-generated method stub
-		
-		super.outAOperacaologicaExpr(node);
+	public void outAOperacaologicaExpr(AOperacaologicaExpr node){		
+		OperacaologicaExpr((Node) node);
 	}
 
-	@Override
-	public void outANegativoExpr(ANegativoExpr node) {
+	public String OperacaologicaExpr(Node no) {
 		// TODO Auto-generated method stub
-		super.outANegativoExpr(node);
+		String ret = "ERRO";
+		switch(no.getClass().toString()){
+			case"class node.AOperacaologicaExpr":
+				
+				String resul_esq;
+				PExpr esquerda = ((AOperacaologicaExpr)no).getPrimeiro();
+				String resul_dir = "";
+				PExpr direita = ((AOperacaologicaExpr)no).getSegundo();
+				resul_esq = OperacaologicaExpr((Node) esquerda);	
+				resul_dir = OperacaologicaExpr((Node) direita);
+				
+				if(resul_esq == "ERRO" || resul_esq == "caractere" ||
+						resul_dir == "ERRO" || resul_dir == "caractere"){
+					ret = "ERRO";
+				}else{
+					ret = "booleano";
+				}					
+			break;
+			
+			case"class node.ANegadoExpr":
+				ret = OperacaologicaExpr(((ANegadoExpr)no).getExpr());
+				break;
+			
+			case"default":
+				ret = OperacaoExpr(no);	
+				break;
+		}			
+		return ret;
 	}
-
-	@Override
-	public void outANegadoExpr(ANegadoExpr node) {
-		// TODO Auto-generated method stub
-		super.outANegadoExpr(node);
-	}
-
-	@Override
-	public void outAInternoExpr(AInternoExpr node) {
-		// TODO Auto-generated method stub
-		super.outAInternoExpr(node);
-	}
-
-	@Override
-	public void outANumeroExpr(ANumeroExpr node) {
-		// TODO Auto-generated method stub
-		super.outANumeroExpr(node);
-	}
-
-	@Override
-	public void outARealExpr(ARealExpr node) {
-		// TODO Auto-generated method stub
-		super.outARealExpr(node);
-	}
-
-	@Override
-	public void outAVariavelExpr(AVariavelExpr node) {
-		// TODO Auto-generated method stub
-		super.outAVariavelExpr(node);
-	}
-
-	@Override
-	public void outAIdVar(AIdVar node) {
-		// TODO Auto-generated method stub
-		super.outAIdVar(node);
-	}
-
-	@Override
-	public void outAVetorVar(AVetorVar node) {
-		// TODO Auto-generated method stub
-		super.outAVetorVar(node);
-	}
-
-	@Override
-	public void outAAddOperacao(AAddOperacao node) {
-		// TODO Auto-generated method stub
-		super.outAAddOperacao(node);
-	}
-
-	@Override
-	public void outASubOperacao(ASubOperacao node) {
-		// TODO Auto-generated method stub
-		super.outASubOperacao(node);
-	}
-
-	@Override
-	public void outAMultOperacao(AMultOperacao node) {
-		// TODO Auto-generated method stub
-		super.outAMultOperacao(node);
-	}
-
-	@Override
-	public void outADivOperacao(ADivOperacao node) {
-		// TODO Auto-generated method stub
-		super.outADivOperacao(node);
-	}
-
-	@Override
-	public void outAMenorigOperacaologica(AMenorigOperacaologica node) {
-		// TODO Auto-generated method stub
-		super.outAMenorigOperacaologica(node);
-	}
-
-	@Override
-	public void outAMaiorigOperacaologica(AMaiorigOperacaologica node) {
-		// TODO Auto-generated method stub
-		super.outAMaiorigOperacaologica(node);
-	}
-
-	@Override
-	public void outAMenorOperacaologica(AMenorOperacaologica node) {
-		// TODO Auto-generated method stub
-		super.outAMenorOperacaologica(node);
-	}
-
-	@Override
-	public void outAMaiorOperacaologica(AMaiorOperacaologica node) {
-		// TODO Auto-generated method stub
-		super.outAMaiorOperacaologica(node);
-	}
-
-	@Override
-	public void outAIgualOperacaologica(AIgualOperacaologica node) {
-		// TODO Auto-generated method stub
-		super.outAIgualOperacaologica(node);
-	}
-
-	@Override
-	public void outADiffOperacaologica(ADiffOperacaologica node) {
-		// TODO Auto-generated method stub
-		super.outADiffOperacaologica(node);
-	}
-
-	@Override
-	public void outAXorOperacaologica(AXorOperacaologica node) {
-		// TODO Auto-generated method stub
-		super.outAXorOperacaologica(node);
-	}
-
-	@Override
-	public void outAOuOperacaologica(AOuOperacaologica node) {
-		// TODO Auto-generated method stub
-		super.outAOuOperacaologica(node);
-	}
-
-	@Override
-	public void outAEOperacaologica(AEOperacaologica node) {
-		// TODO Auto-generated method stub
-		super.outAEOperacaologica(node);
-	}
-
+				
+//-----------------------------------------------------------------------
 	@Override
 	public void outASeComandoSe(ASeComandoSe node) {
-		// TODO Auto-generated method stub
+		String expr = OperacaologicaExpr((Node)node.getExpr());
+		node.getComando();
 		super.outASeComandoSe(node);
 	}
 
 	@Override
 	public void outASeNaoComandoSe(ASeNaoComandoSe node) {
 		// TODO Auto-generated method stub
+		String expr = OperacaologicaExpr((Node)node.getExpr());
 		super.outASeNaoComandoSe(node);
 	}
 
 	@Override
 	public void outAComandoRepita(AComandoRepita node) {
 		// TODO Auto-generated method stub
+		OperacaoExpr(node.getExpr());
 		super.outAComandoRepita(node);
 	}
 
 	@Override
 	public void outAComandoEnquanto(AComandoEnquanto node) {
 		// TODO Auto-generated method stub
+		OperacaoExpr(node.getExpr());
 		super.outAComandoEnquanto(node);
 	}
 
-	@Override
-	public void outACasos(ACasos node) {
+	public void Casos(ACasos node,String esperado) {
 		// TODO Auto-generated method stub
+		switch(node.getValor().getClass().toString())
+		{
+			case "class node.AStringValor":
+				if(esperado != "caractere"){
+					System.err.println("Erro semantico: tipo diferente do esperado no caso da avaliação: "+((AStringValor)node.getValor()).getString().getText()+" ["+
+					 		Integer.toString(((AStringValor)node.getValor()).getString().getLine())+
+		        		","+Integer.toString(((AStringValor)node.getValor()).getString().getPos())+"]");
+				}
+			break;
+			case "class node.ANumeroValor":
+				if(esperado != "inteiro"){
+					System.err.println("Erro semantico: diferentes tipos nos casos da avaliação \'"+((ANumeroValor)node.getValor()).getNumero().getText()+"\' ["+
+					 		Integer.toString(((ANumeroValor)node.getValor()).getNumero().getLine())+
+		        		","+Integer.toString(((ANumeroValor)node.getValor()).getNumero().getPos())+"]");
+				}
+			break;
+			case "class node.ARealValor":
+				if(esperado != "real"){
+					System.err.println("Erro semantico: diferentes tipos nos casos da avaliação \'"+((ARealValor)node.getValor()).getNumeroReal().getText()+"\' ["+
+					 		Integer.toString(((ARealValor)node.getValor()).getNumeroReal().getLine())+
+		        		","+Integer.toString(((ARealValor)node.getValor()).getNumeroReal().getPos())+"]");
+				}
+			break;
+		}
 		super.outACasos(node);
 	}
 
 	@Override
 	public void outANormalComandoAvalie(ANormalComandoAvalie node) {
 		// TODO Auto-generated method stub
+		String expr = OperacaoExpr(node.getExpr());
+		LinkedList<PCasos> lista = node.getCasos();
+		if(expr != "ERRO")
+		{
+		 while(lista.peek() != null)
+		 {Casos((ACasos)lista.pop(),expr);}
+		}
 		super.outANormalComandoAvalie(node);
 	}
 
 	@Override
 	public void outASenaoComandoAvalie(ASenaoComandoAvalie node) {
 		// TODO Auto-generated method stub
+		String expr = OperacaoExpr(node.getExpr());
+		LinkedList<PCasos> lista = node.getCasos();
+		if(expr != "ERRO")
+		{
+		 while(lista.peek() != null)
+		 {Casos((ACasos)lista.pop(),expr);}
+		}
 		super.outASenaoComandoAvalie(node);
 	}
 
@@ -425,6 +386,7 @@ public class Semantico extends DepthFirstAdapter {
 	@Override
 	public void outASempassoComandoPara(ASempassoComandoPara node) {
 		// TODO Auto-generated method stub
+		= ((ANumParatipos)node.getParatipos()).getNumero();
 		super.outASempassoComandoPara(node);
 	}
 
@@ -437,73 +399,158 @@ public class Semantico extends DepthFirstAdapter {
 	@Override
 	public void outANormalComandoEscrita(ANormalComandoEscrita node) {
 		// TODO Auto-generated method stub
+		OperacaoExpr(node.getExpr());
 		super.outANormalComandoEscrita(node);
 	}
 
-	@Override
-	public void outAStrComandoEscrita(AStrComandoEscrita node) {
-		// TODO Auto-generated method stub
-		super.outAStrComandoEscrita(node);
-	}
 
 	@Override
 	public void outAComandoLeia(AComandoLeia node) {
 		// TODO Auto-generated method stub
-		super.outAComandoLeia(node);
+		String tipoVar = null;
+		switch(node.getVar().getClass().toString())
+		 {
+		  	case "class node.AIdVar":				  		
+				 AIdVar variavel = (AIdVar) node.getVar();									
+				 Simbolo sim = tabelaSimbolos.get(variavel.getIdentificador().getText());					
+				 if(sim==null)
+				 {					
+					 System.err.println("Erro semantico: variável não declarada \'"+variavel.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+				 }else if(sim.getValor() != null)
+				 {
+					 System.err.println("Erro semantico: não se modifica o valor de uma constante: \'"+variavel.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+				 }else if(sim.getTamanho() != -15328 && sim.getTipo() != "caractere")
+				 {
+					 System.err.println("Erro semantico: posicao do vetor nao especificada: \'"+variavel.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+				 }
+				 else{
+					 tipoVar = sim.getTipo();
+				 }
+			 
+			 break;
+		  	case "class node.AVetorVar":				
+		  		 AVetorVar variavel2 = (AVetorVar) node.getVar();
+				 sim = tabelaSimbolos.get(variavel2.getIdentificador().getText());						
+				 if(OperacaoExpr((Node)variavel2.getExpr()) != "inteiro")
+				 {
+					 System.err.println("Erro semantico: enderenço do vetor não é inteiro \'"+variavel2.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel2.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }
+				 if(sim==null)
+				 {
+					 System.err.println("Erro semantico: variável não declarada \'"+variavel2.getIdentificador().getText()+"\' ["+
+							 		Integer.toString(variavel2.getIdentificador().getLine())+
+				        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }else if(sim.getTamanho() == -15328)
+				 {
+					 System.err.println("Erro semantico: não é um vetor: \'"+variavel2.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel2.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }
+				 else if(sim.getValor() != null)
+				 {
+					 System.err.println("Erro semantico: não se modifica o valor de uma constante: \'"+variavel2.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel2.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }else
+				 {
+					 tipoVar = sim.getTipo();
+				 }
+				 
+		  	break;
+		 }
+		//super.outAComandoLeia(node);
 	}
 
 	@Override
 	public void outAComandoAtribuicao(AComandoAtribuicao node) {
 		// TODO Auto-generated method stub
-		super.outAComandoAtribuicao(node);
+		String tipoVar = null;
+		String tipoExpr = OperacaoExpr(node.getExpr());
+		switch(node.getVar().getClass().toString())
+		 {
+		  	case "class node.AIdVar":				  		
+				 AIdVar variavel = (AIdVar) node.getVar();									
+				 Simbolo sim = tabelaSimbolos.get(variavel.getIdentificador().getText());					
+				 if(sim==null)
+				 {					
+					 System.err.println("Erro semantico: variável não declarada \'"+variavel.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+				 }
+				 else if(sim.getValor() != null)
+				 {
+					 System.err.println("Erro semantico: não se modifica o valor de uma constante: \'"+variavel.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+				 }else if(sim.getTamanho() != -15328)
+				 {
+					 System.err.println("Erro semantico: posicao do vetor nao especificada: \'"+variavel.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+				 }
+				 else{
+					 tipoVar = sim.getTipo();
+				 }
+				 if(tipoVar!=null)
+					{
+						if(tipoExpr !=  tipoVar && tipoExpr == "real" || tipoVar == "caractere"){
+							System.err.println("Erro incompatibilidade de tipos na atribuição a variavel \'"+variavel.getIdentificador().getText()+"\' ["+
+							 		Integer.toString(variavel.getIdentificador().getLine())+
+				        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+						}
+					}
+			 
+			 break;
+		  	case "class node.AVetorVar":				
+		  		 AVetorVar variavel2 = (AVetorVar) node.getVar();
+				 sim = tabelaSimbolos.get(variavel2.getIdentificador().getText());						
+				 if(OperacaoExpr((Node)variavel2.getExpr()) != "inteiro")
+				 {
+					 System.err.println("Erro semantico: enderenço do vetor não é inteiro \'"+variavel2.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel2.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }
+				 if(sim==null)
+				 {
+					 System.err.println("Erro semantico: variável não declarada \'"+variavel2.getIdentificador().getText()+"\' ["+
+							 		Integer.toString(variavel2.getIdentificador().getLine())+
+				        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }else if(sim.getTamanho() == -15328)
+				 {
+					 System.err.println("Erro semantico: não é um vetor: \'"+variavel2.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel2.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }
+				 else if(sim.getValor() != null)
+				 {
+					 System.err.println("Erro semantico: não se modifica o valor de uma constante: \'"+variavel2.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel2.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }else
+				 {
+					 tipoVar = sim.getTipo();
+				 }
+				 if(tipoVar!=null)
+					{
+						if(tipoExpr !=  tipoVar && tipoExpr == "real" || tipoVar == "caractere"){
+							System.err.println("Erro incompatibilidade de tipos na atribuição a variavel \'"+variavel2.getIdentificador().getText()+"\' ["+
+							 		Integer.toString(variavel2.getIdentificador().getLine())+
+				        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+						}
+					}
+				 
+		  	break;
+		 }
+		//super.outAComandoAtribuicao(node);
 	}
 
-	@Override
-	public void outALeiaComando(ALeiaComando node) {
-		// TODO Auto-generated method stub
-		super.outALeiaComando(node);
-	}
-
-	@Override
-	public void outARepitaComando(ARepitaComando node) {
-		// TODO Auto-generated method stub
-		super.outARepitaComando(node);
-	}
-
-	@Override
-	public void outAEnquantoComando(AEnquantoComando node) {
-		// TODO Auto-generated method stub
-		super.outAEnquantoComando(node);
-	}
-
-	@Override
-	public void outAAvaliarComando(AAvaliarComando node) {
-		// TODO Auto-generated method stub
-		super.outAAvaliarComando(node);
-	}
-
-	@Override
-	public void outAEscritaComando(AEscritaComando node) {
-		// TODO Auto-generated method stub
-		super.outAEscritaComando(node);
-	}
-
-	@Override
-	public void outASeComando(ASeComando node) {
-		// TODO Auto-generated method stub
-		super.outASeComando(node);
-	}
-
-	@Override
-	public void outAAtribuicaoComando(AAtribuicaoComando node) {
-		// TODO Auto-generated method stub
-		super.outAAtribuicaoComando(node);
-	}
-
-	@Override
-	public void outAParaComando(AParaComando node) {
-		// TODO Auto-generated method stub
-		super.outAParaComando(node);
-	}
 
 }

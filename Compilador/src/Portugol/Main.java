@@ -24,41 +24,34 @@ public class Main {
         	MeuParser parser = new MeuParser(lexer);  
         	boolean erroSintatico = false;
         	
-        	while(true){  
-        		try
-        		{	        			
-        			if (lexer.next().getText() == ""){
-            			break;
-            		}
-        			Start ast = parser.parse() ;
-        			ast.toString();
-        			if(!erroSintatico)
-        			{	System.out.println("Código sintáticamente correto!");
-        				Semantico semantica = new Semantico();
-        				ast.apply(semantica);
-        			}
+        	try
+        	{	        			
+        		Start ast = parser.parse() ;
+        		ast.toString();
+        		if(!erroSintatico)
+        		{	System.out.println("Código sintáticamente correto!");
+        			Semantico semantica = new Semantico();
+        			ast.apply(semantica);
         		}
-        		catch (LexerException e)
-        		{
-        			erroSintatico = true;
-        			int a,b,c,d;
-        			String x,y,z;
-        			a = e.getMessage().indexOf(":");b = e.getMessage().indexOf("[");
-        			c = e.getMessage().indexOf(",");d = e.getMessage().indexOf("]");
-        			x = e.getMessage().substring(a+1, a+3);
-        			y = Integer.toString(Integer.parseInt(e.getMessage().substring(b+1,c))-lexer.desvio);
-        			z = Integer.toString(Integer.parseInt(e.getMessage().substring(c+1,d)));
-        			System.err.println ("Erro léxico token deconhecido "+"["+y+","+z+"]:"+x); 
-        		}
-        		catch(Exception e){
-        			if(!erroSintatico)
-        			{erroSintatico = true;
-        			 System.err.println("Erro sintático!:"+e.getMessage());
-        			}
-        		}
-        		
         	}
-
+        	catch (LexerException e)
+        	{
+        		erroSintatico = true;
+        		int a,b,c,d;
+        		String x,y,z;
+        		a = e.getMessage().indexOf(":");b = e.getMessage().indexOf("[");
+        		c = e.getMessage().indexOf(",");d = e.getMessage().indexOf("]");
+        		x = e.getMessage().substring(a+1, a+3);
+        		y = Integer.toString(Integer.parseInt(e.getMessage().substring(b+1,c))-lexer.desvio);
+        		z = Integer.toString(Integer.parseInt(e.getMessage().substring(c+1,d)));
+        		System.err.println ("Erro léxico token deconhecido "+"["+y+","+z+"]:"+x); 
+        	}
+        	catch(Exception e){
+        		if(!erroSintatico)
+        		{erroSintatico = true;
+        		 System.err.println("Erro sintático!:"+e.getMessage());
+        		}
+        	}
          } 
          catch (Exception e) { 
 

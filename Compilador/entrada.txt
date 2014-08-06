@@ -14,14 +14,9 @@ inicio
 	const Desenvolvedor1 'Breno Cruz';
 	const Desenvolvedor2 'Claudio Mota';
 	const numeroReal 2,25;
-	inteiro : iterador, opcao, ultimo, entrada[5];
+	inteiro : iterador, opcao , a, ultimo, entrada[5];
 	real: numeroReal2;		
-	
-	//inteiro: ProgramaDeTeste;
-	
-	iterador <- entrada[0]*Desenvolvedor*2*2,5+ooaoa;
-	opcao <- 0,8;
-	se (2 = 3) entao escreva('nada'); fim se;
+	iterador <- entrada[opcao+24]*2;
 	escreva('Olá mundo\n');	
 	escreva('Qual operacao deseja fazer?\n');
 	leia(opcao);

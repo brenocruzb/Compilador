@@ -18,4 +18,5 @@
 <fullyQualifiedTypeName name="java.util.LinkedList"/>
 <fullyQualifiedTypeName name="node.AAddOperacao"/>
 <fullyQualifiedTypeName name="node.AVariavelExpr"/>
+<fullyQualifiedTypeName name="java.lang.System"/>
 </qualifiedTypeNameHistroy>
