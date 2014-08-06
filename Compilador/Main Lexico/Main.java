@@ -15,7 +15,6 @@ public class Main {
    public static void main(String[] args) { 
       if (args.length > 0) { 
          try { 
-            /* Form our AST */ 
         	MyLexer lexer = new MyLexer (new PushbackReader(new FileReader(args[0]), 1024));
         	while(true)
         	{

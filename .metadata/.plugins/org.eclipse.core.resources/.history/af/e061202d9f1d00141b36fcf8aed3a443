@@ -1,0 +1,29 @@
+/*
+	Universidade Federal de Sergipe
+	Departamento de Computação
+	
+	Compilador Portugol - programa de teste para léxico positivo 1
+
+	Professor: Kalil Araujo Bispo
+	Alunos:    Breno Cruz
+		   	   Claudio Mota Oliveira
+*/
+
+programa ProgramaDeTeste;
+inicio
+	inteiro
+	real
+	caractere
+	variaveldenomequalquer
+	[26]
+	:,;
+	+-*/=
+	()
+	se entao fim se
+	equanto faca fim enquanto
+	repita ate fim repita fim repita
+	para de ate faca fim para
+	avalie caso fim avalie
+	senao
+	
+fim.
