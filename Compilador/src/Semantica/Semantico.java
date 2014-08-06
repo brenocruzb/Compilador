@@ -23,18 +23,18 @@ public class Semantico extends DepthFirstAdapter {
 		Simbolo sim = new Simbolo();
 		if(valor.charAt(0)=='\'')
 		{
-			sim.setTipo("caractere");
+			sim.setTipo(Simbolo.caractere);
 			sim.setTamanho(valor.length()-2);
 			sim.setValor(valor.substring(1,valor.length()-2));
 		}else
 		{
 			if(valor.contains(","))
-			{	sim.setTipo("real");
+			{	sim.setTipo(Simbolo.real);
 				valor = valor.replace(',','.');   
 				sim.setValor(Double.parseDouble(valor));
 			}
 			else
-			{	sim.setTipo("inteiro");
+			{	sim.setTipo(Simbolo.inteiro);
 				sim.setValor(Integer.parseInt(valor));
 			}
 		}
@@ -138,32 +138,32 @@ public class Semantico extends DepthFirstAdapter {
 	}
 
 	
-	public String OperacaoExpr(Node no) {
+	public int OperacaoExpr(Node no) {
 		// TODO Auto-generated method stub
-		String ret = "ERRO";
+		int ret = Simbolo.ERRO;
 		//AVariavelExpr node = (AVariavelExpr)no;
 		switch(no.getClass().toString()){
 			case "class node.AOperacaoExpr":			
-				String resul_esq;
+				int resul_esq;
 				PExpr esquerda = ((AOperacaoExpr)no).getPrimeiro();
-				String resul_dir;
+				int resul_dir;
 				PExpr direita = ((AOperacaoExpr)no).getSegundo();
 				resul_esq = OperacaoExpr((Node) esquerda);	
 				resul_dir = OperacaoExpr((Node) direita);
 				
 				// "inteiro" "real" "caractere" "ERRO"
 				
-				if(resul_esq == "caractere" || resul_dir == "caractere"){
+				if(resul_esq == Simbolo.caractere || resul_dir == Simbolo.caractere){
 					System.err.println("Erro semantico: operações aritmeticas com caracteres não são permitidas,");
-					ret = "ERRO";
+					ret = Simbolo.ERRO;
 				}
 				else if(resul_esq == resul_dir){
 					ret = resul_esq;
 				}
-				else if(resul_esq == "real" || resul_dir == "real"){
-					ret = "real";
+				else if(resul_esq == Simbolo.real || resul_dir == Simbolo.real){
+					ret = Simbolo.real;
 				}else{
-					ret = "inteiro";
+					ret = Simbolo.inteiro;
 				}
 			break;
 			
@@ -173,18 +173,18 @@ public class Semantico extends DepthFirstAdapter {
 			
 			case "class node.ANegativoExpr":
 				ret = OperacaoExpr(((ANegativoExpr)no).getExpr());
-				if(ret == "caractere")
-				{	ret = "ERRO";
+				if(ret == Simbolo.caractere)
+				{	ret = Simbolo.ERRO;
 					System.err.println("Erro semantico: operações aritmeticas com caracteres não são permitidas,");
 				}
 			break;
 			
 			case "class node.ANumeroExpr":			
-				ret = "inteiro";
+				ret = Simbolo.inteiro;
 			break;
 		
 			case "class node.ARealExpr":				
-				ret = "real";
+				ret = Simbolo.real;
 			break;
 		
 			case "class node.AVariavelExpr":						
@@ -195,13 +195,13 @@ public class Semantico extends DepthFirstAdapter {
 					 Simbolo sim = tabelaSimbolos.get(variavel.getIdentificador().getText());					
 					 if(sim!=null)
 					 {
-					     if(sim.getTamanho() != -15328 && sim.getTipo() != "caractere")
+					     if(sim.getTamanho() != -15328 && sim.getTipo() != Simbolo.caractere)
 						 {
 							 System.err.println("Erro semantico: posicao do vetor nao especificada: \'"+variavel.getIdentificador().getText()+"\' ["+
 								 		Integer.toString(variavel.getIdentificador().getLine())+
 					        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
 						 }
-						 return sim.getTipo();							
+					     return sim.getTipo();							
 					 }else
 					 {
 						 System.err.println("Erro semantico: variável não declarada \'"+variavel.getIdentificador().getText()+"\' ["+
@@ -213,7 +213,7 @@ public class Semantico extends DepthFirstAdapter {
 			  	case "class node.AVetorVar":				
 			  		 AVetorVar variavel2 = (AVetorVar) ((AVariavelExpr)no).getVar();				  	
 					 sim = tabelaSimbolos.get(variavel2.getIdentificador().getText());
-					 if(OperacaoExpr((Node)variavel2.getExpr()) != "inteiro")
+					 if(OperacaoExpr((Node)variavel2.getExpr()) != Simbolo.inteiro)
 					 {
 						 System.err.println("Erro semantico: enderenço do vetor não é inteiro \'"+variavel2.getIdentificador().getText()+"\' ["+
 							 		Integer.toString(variavel2.getIdentificador().getLine())+
@@ -221,7 +221,7 @@ public class Semantico extends DepthFirstAdapter {
 					 }
 					 if(sim!=null)
 					 {
-						 if(sim.getTipo()=="caractere")
+						 if(sim.getTipo()==Simbolo.caractere)
 						 {
 							 System.err.println("Erro semantico: Operação não autorizada para variaveis do tipo caractere, \'"+variavel2.getIdentificador().getText()+"\' ["+
 										 		Integer.toString(variavel2.getIdentificador().getLine())+
@@ -250,29 +250,60 @@ public class Semantico extends DepthFirstAdapter {
 		return ret;
 	}
 //-------------------------------------------------
-	@Override
-	public void outAOperacaologicaExpr(AOperacaologicaExpr node){		
-		OperacaologicaExpr((Node) node);
-	}
 
-	public String OperacaologicaExpr(Node no) {
+	public int OperacaologicaExpr(Node no) {
 		// TODO Auto-generated method stub
-		String ret = "ERRO";
+		int ret = Simbolo.ERRO;
 		switch(no.getClass().toString()){
 			case"class node.AOperacaologicaExpr":
 				
-				String resul_esq;
+				int resul_esq;
 				PExpr esquerda = ((AOperacaologicaExpr)no).getPrimeiro();
-				String resul_dir = "";
+				int resul_dir;
 				PExpr direita = ((AOperacaologicaExpr)no).getSegundo();
-				resul_esq = OperacaologicaExpr((Node) esquerda);	
-				resul_dir = OperacaologicaExpr((Node) direita);
-				
-				if(resul_esq == "ERRO" || resul_esq == "caractere" ||
-						resul_dir == "ERRO" || resul_dir == "caractere"){
-					ret = "ERRO";
+				resul_esq = OperacaoExpr((Node) esquerda);	
+				resul_dir = OperacaoExpr((Node) direita);
+				if(resul_esq == Simbolo.caractere){
+					switch(((AVariavelExpr)((Node)esquerda)).getVar().getClass().toString())
+					{
+						case "class node.AIdVar":
+							AIdVar variavel = (AIdVar)((AVariavelExpr)((Node)esquerda)).getVar();
+							System.err.println("Erro semantico: operações lógica com caracteres não são permitidas: \'"+variavel.getIdentificador().getText()+"\' ["+
+							 		Integer.toString(variavel.getIdentificador().getLine())+
+				        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+						break;
+						case "class node.AVetorVar":
+							AVetorVar variavel2 = (AVetorVar)((AVariavelExpr)((Node)esquerda)).getVar();
+							 System.err.println("Erro semantico: operações lógica com caracteres não são permitidas: \'"+variavel2.getIdentificador().getText()+"\' ["+
+								 		Integer.toString(variavel2.getIdentificador().getLine())+
+					        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+						break;
+					
+					}
+					ret = Simbolo.ERRO;
+				}else if(resul_dir == Simbolo.caractere){
+					switch(((AVariavelExpr)((Node)direita)).getVar().getClass().toString())
+					{
+						case "class node.AIdVar":
+							AIdVar variavel = (AIdVar)((AVariavelExpr)((Node)direita)).getVar();
+							System.err.println("Erro semantico: operações lógica com caracteres não são permitidas: \'"+variavel.getIdentificador().getText()+"\' ["+
+							 		Integer.toString(variavel.getIdentificador().getLine())+
+				        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+						break;
+						case "class node.AVetorVar":
+							AVetorVar variavel2 = (AVetorVar)((AVariavelExpr)((Node)direita)).getVar();
+							 System.err.println("Erro semantico: operações lógica com caracteres não são permitidas: \'"+variavel2.getIdentificador().getText()+"\' ["+
+								 		Integer.toString(variavel2.getIdentificador().getLine())+
+					        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+						break;
+					
+					}
+					ret = Simbolo.ERRO;
+				}
+				 else if(resul_esq == Simbolo.ERRO || resul_dir == Simbolo.ERRO){
+					ret = Simbolo.ERRO;				
 				}else{
-					ret = "booleano";
+					ret = Simbolo.booleano;
 				}					
 			break;
 			
@@ -290,7 +321,7 @@ public class Semantico extends DepthFirstAdapter {
 //-----------------------------------------------------------------------
 	@Override
 	public void outASeComandoSe(ASeComandoSe node) {
-		String expr = OperacaologicaExpr((Node)node.getExpr());
+		int expr = OperacaologicaExpr((Node)node.getExpr());
 		node.getComando();
 		super.outASeComandoSe(node);
 	}
@@ -298,7 +329,7 @@ public class Semantico extends DepthFirstAdapter {
 	@Override
 	public void outASeNaoComandoSe(ASeNaoComandoSe node) {
 		// TODO Auto-generated method stub
-		String expr = OperacaologicaExpr((Node)node.getExpr());
+		int expr = OperacaologicaExpr((Node)node.getExpr());
 		super.outASeNaoComandoSe(node);
 	}
 
@@ -316,26 +347,26 @@ public class Semantico extends DepthFirstAdapter {
 		super.outAComandoEnquanto(node);
 	}
 
-	public void Casos(ACasos node,String esperado) {
+	public void Casos(ACasos node,int esperado) {
 		// TODO Auto-generated method stub
 		switch(node.getValor().getClass().toString())
 		{
 			case "class node.AStringValor":
-				if(esperado != "caractere"){
+				if(esperado != Simbolo.caractere){
 					System.err.println("Erro semantico: tipo diferente do esperado no caso da avaliação: "+((AStringValor)node.getValor()).getString().getText()+" ["+
 					 		Integer.toString(((AStringValor)node.getValor()).getString().getLine())+
 		        		","+Integer.toString(((AStringValor)node.getValor()).getString().getPos())+"]");
 				}
 			break;
 			case "class node.ANumeroValor":
-				if(esperado != "inteiro"){
+				if(esperado != Simbolo.inteiro){
 					System.err.println("Erro semantico: diferentes tipos nos casos da avaliação \'"+((ANumeroValor)node.getValor()).getNumero().getText()+"\' ["+
 					 		Integer.toString(((ANumeroValor)node.getValor()).getNumero().getLine())+
 		        		","+Integer.toString(((ANumeroValor)node.getValor()).getNumero().getPos())+"]");
 				}
 			break;
 			case "class node.ARealValor":
-				if(esperado != "real"){
+				if(esperado != Simbolo.real){
 					System.err.println("Erro semantico: diferentes tipos nos casos da avaliação \'"+((ARealValor)node.getValor()).getNumeroReal().getText()+"\' ["+
 					 		Integer.toString(((ARealValor)node.getValor()).getNumeroReal().getLine())+
 		        		","+Integer.toString(((ARealValor)node.getValor()).getNumeroReal().getPos())+"]");
@@ -348,9 +379,9 @@ public class Semantico extends DepthFirstAdapter {
 	@Override
 	public void outANormalComandoAvalie(ANormalComandoAvalie node) {
 		// TODO Auto-generated method stub
-		String expr = OperacaoExpr(node.getExpr());
+		int expr = OperacaoExpr(node.getExpr());
 		LinkedList<PCasos> lista = node.getCasos();
-		if(expr != "ERRO")
+		if(expr != Simbolo.ERRO)
 		{
 		 while(lista.peek() != null)
 		 {Casos((ACasos)lista.pop(),expr);}
@@ -361,9 +392,9 @@ public class Semantico extends DepthFirstAdapter {
 	@Override
 	public void outASenaoComandoAvalie(ASenaoComandoAvalie node) {
 		// TODO Auto-generated method stub
-		String expr = OperacaoExpr(node.getExpr());
+		int expr = OperacaoExpr(node.getExpr());
 		LinkedList<PCasos> lista = node.getCasos();
-		if(expr != "ERRO")
+		if(expr != Simbolo.ERRO)
 		{
 		 while(lista.peek() != null)
 		 {Casos((ACasos)lista.pop(),expr);}
@@ -380,19 +411,237 @@ public class Semantico extends DepthFirstAdapter {
 	@Override
 	public void outAVarParatipos(AVarParatipos node) {
 		// TODO Auto-generated method stub
+		int tipoVar = -5;
+		switch(node.getVar().getClass().toString())
+		 {
+		  	case "class node.AIdVar":				  		
+				 AIdVar variavel = (AIdVar) node.getVar();									
+				 Simbolo sim = tabelaSimbolos.get(variavel.getIdentificador().getText());					
+				 if(sim==null)
+				 {					
+					 System.err.println("Erro semantico: variável não declarada \'"+variavel.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+				 }
+				 else if(sim.getTamanho() != -15328)
+				 {
+					 System.err.println("Erro semantico: posicao do vetor nao especificada: \'"+variavel.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+				 }
+				 else{
+					 tipoVar = sim.getTipo();
+				 }
+				 if(tipoVar!=-5)
+					{
+						if(Simbolo.inteiro !=  tipoVar){
+							System.err.println("Erro semantico: simbolos do comando para só podem ser inteiros \'"+variavel.getIdentificador().getText()+"\' ["+
+							 		Integer.toString(variavel.getIdentificador().getLine())+
+				        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+						}
+					}
+			 
+			 break;
+		  	case "class node.AVetorVar":				
+		  		 AVetorVar variavel2 = (AVetorVar) node.getVar();
+				 sim = tabelaSimbolos.get(variavel2.getIdentificador().getText());						
+				 if(OperacaoExpr((Node)variavel2.getExpr()) != Simbolo.inteiro)
+				 {
+					 System.err.println("Erro semantico: enderenço do vetor não é inteiro \'"+variavel2.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel2.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }
+				 if(sim==null)
+				 {
+					 System.err.println("Erro semantico: variável não declarada \'"+variavel2.getIdentificador().getText()+"\' ["+
+							 		Integer.toString(variavel2.getIdentificador().getLine())+
+				        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }else if(sim.getTamanho() == -15328)
+				 {
+					 System.err.println("Erro semantico: não é um vetor: \'"+variavel2.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel2.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }
+				 else
+				 {
+					 tipoVar = sim.getTipo();
+				 }
+				 if(tipoVar!=-5)
+					{
+						if(Simbolo.inteiro !=  tipoVar){
+							System.err.println("Erro semantico: simbolos do comando para só podem ser inteiros \'"+variavel2.getIdentificador().getText()+"\' ["+
+							 		Integer.toString(variavel2.getIdentificador().getLine())+
+				        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+						}
+					}
+				 
+		  	break;
+		 }
 		super.outAVarParatipos(node);
 	}
 
 	@Override
 	public void outASempassoComandoPara(ASempassoComandoPara node) {
 		// TODO Auto-generated method stub
-		= ((ANumParatipos)node.getParatipos()).getNumero();
+		int tipoVar = -5;
+		switch(node.getVar().getClass().toString())
+		 {
+		  	case "class node.AIdVar":				  		
+				 AIdVar variavel = (AIdVar) node.getVar();									
+				 Simbolo sim = tabelaSimbolos.get(variavel.getIdentificador().getText());					
+				 if(sim==null)
+				 {					
+					 System.err.println("Erro semantico: variável não declarada \'"+variavel.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+				 }
+				 else if(sim.getValor() != null)
+				 {
+					 System.err.println("Erro semantico: não se modifica o valor de uma constante: \'"+variavel.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+				 }else if(sim.getTamanho() != -15328)
+				 {
+					 System.err.println("Erro semantico: posicao do vetor nao especificada: \'"+variavel.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+				 }
+				 else{
+					 tipoVar = sim.getTipo();
+				 }
+				 if(tipoVar!=-5)
+					{
+						if(Simbolo.inteiro !=  tipoVar){
+							System.err.println("Erro semantico: iterador do para só pode ser inteiro \'"+variavel.getIdentificador().getText()+"\' ["+
+							 		Integer.toString(variavel.getIdentificador().getLine())+
+				        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+						}
+					}
+			 
+			 break;
+		  	case "class node.AVetorVar":				
+		  		 AVetorVar variavel2 = (AVetorVar) node.getVar();
+				 sim = tabelaSimbolos.get(variavel2.getIdentificador().getText());						
+				 if(OperacaoExpr((Node)variavel2.getExpr()) != Simbolo.inteiro)
+				 {
+					 System.err.println("Erro semantico: enderenço do vetor não é inteiro \'"+variavel2.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel2.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }
+				 if(sim==null)
+				 {
+					 System.err.println("Erro semantico: variável não declarada \'"+variavel2.getIdentificador().getText()+"\' ["+
+							 		Integer.toString(variavel2.getIdentificador().getLine())+
+				        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }else if(sim.getTamanho() == -15328)
+				 {
+					 System.err.println("Erro semantico: não é um vetor: \'"+variavel2.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel2.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }
+				 else if(sim.getValor() != null)
+				 {
+					 System.err.println("Erro semantico: não se modifica o valor de uma constante: \'"+variavel2.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel2.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }else
+				 {
+					 tipoVar = sim.getTipo();
+				 }
+				 if(tipoVar!=-5)
+					{
+						if(Simbolo.inteiro !=  tipoVar){
+							System.err.println("Erro semantico: iterador do para só pode ser inteiro \'"+variavel2.getIdentificador().getText()+"\' ["+
+							 		Integer.toString(variavel2.getIdentificador().getLine())+
+				        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+						}
+					}
+				 
+		  	break;
+		 }
+		//= ((ANumParatipos)node.getParatipos()).getNumero();
 		super.outASempassoComandoPara(node);
 	}
 
 	@Override
 	public void outACompassoComandoPara(ACompassoComandoPara node) {
 		// TODO Auto-generated method stub
+		int tipoVar = -5;
+		switch(node.getVar().getClass().toString())
+		 {
+		  	case "class node.AIdVar":				  		
+				 AIdVar variavel = (AIdVar) node.getVar();									
+				 Simbolo sim = tabelaSimbolos.get(variavel.getIdentificador().getText());					
+				 if(sim==null)
+				 {					
+					 System.err.println("Erro semantico: variável não declarada \'"+variavel.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+				 }
+				 else if(sim.getValor() != null)
+				 {
+					 System.err.println("Erro semantico: não se modifica o valor de uma constante: \'"+variavel.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+				 }else if(sim.getTamanho() != -15328)
+				 {
+					 System.err.println("Erro semantico: posicao do vetor nao especificada: \'"+variavel.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+				 }
+				 else{
+					 tipoVar = sim.getTipo();
+				 }
+				 if(tipoVar!=-5)
+					{
+						if(Simbolo.inteiro !=  tipoVar){
+							System.err.println("Erro semantico: iterador do para só pode ser inteiro \'"+variavel.getIdentificador().getText()+"\' ["+
+							 		Integer.toString(variavel.getIdentificador().getLine())+
+				        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+						}
+					}
+			 
+			 break;
+		  	case "class node.AVetorVar":				
+		  		 AVetorVar variavel2 = (AVetorVar) node.getVar();
+				 sim = tabelaSimbolos.get(variavel2.getIdentificador().getText());						
+				 if(OperacaoExpr((Node)variavel2.getExpr()) != Simbolo.inteiro)
+				 {
+					 System.err.println("Erro semantico: enderenço do vetor não é inteiro \'"+variavel2.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel2.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }
+				 if(sim==null)
+				 {
+					 System.err.println("Erro semantico: variável não declarada \'"+variavel2.getIdentificador().getText()+"\' ["+
+							 		Integer.toString(variavel2.getIdentificador().getLine())+
+				        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }else if(sim.getTamanho() == -15328)
+				 {
+					 System.err.println("Erro semantico: não é um vetor: \'"+variavel2.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel2.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }
+				 else if(sim.getValor() != null)
+				 {
+					 System.err.println("Erro semantico: não se modifica o valor de uma constante: \'"+variavel2.getIdentificador().getText()+"\' ["+
+						 		Integer.toString(variavel2.getIdentificador().getLine())+
+			        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+				 }else
+				 {
+					 tipoVar = sim.getTipo();
+				 }
+				 if(tipoVar!=-5)
+					{
+						if(Simbolo.inteiro !=  tipoVar){
+							System.err.println("Erro semantico: iterador do para só pode ser inteiro \'"+variavel2.getIdentificador().getText()+"\' ["+
+							 		Integer.toString(variavel2.getIdentificador().getLine())+
+				        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+						}
+					}
+				 
+		  	break;
+		 }
 		super.outACompassoComandoPara(node);
 	}
 
@@ -407,7 +656,7 @@ public class Semantico extends DepthFirstAdapter {
 	@Override
 	public void outAComandoLeia(AComandoLeia node) {
 		// TODO Auto-generated method stub
-		String tipoVar = null;
+		int tipoVar = -5;
 		switch(node.getVar().getClass().toString())
 		 {
 		  	case "class node.AIdVar":				  		
@@ -423,7 +672,7 @@ public class Semantico extends DepthFirstAdapter {
 					 System.err.println("Erro semantico: não se modifica o valor de uma constante: \'"+variavel.getIdentificador().getText()+"\' ["+
 						 		Integer.toString(variavel.getIdentificador().getLine())+
 			        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
-				 }else if(sim.getTamanho() != -15328 && sim.getTipo() != "caractere")
+				 }else if(sim.getTamanho() != -15328 && sim.getTipo() != Simbolo.caractere)
 				 {
 					 System.err.println("Erro semantico: posicao do vetor nao especificada: \'"+variavel.getIdentificador().getText()+"\' ["+
 						 		Integer.toString(variavel.getIdentificador().getLine())+
@@ -437,7 +686,7 @@ public class Semantico extends DepthFirstAdapter {
 		  	case "class node.AVetorVar":				
 		  		 AVetorVar variavel2 = (AVetorVar) node.getVar();
 				 sim = tabelaSimbolos.get(variavel2.getIdentificador().getText());						
-				 if(OperacaoExpr((Node)variavel2.getExpr()) != "inteiro")
+				 if(OperacaoExpr((Node)variavel2.getExpr()) != Simbolo.inteiro)
 				 {
 					 System.err.println("Erro semantico: enderenço do vetor não é inteiro \'"+variavel2.getIdentificador().getText()+"\' ["+
 						 		Integer.toString(variavel2.getIdentificador().getLine())+
@@ -472,8 +721,8 @@ public class Semantico extends DepthFirstAdapter {
 	@Override
 	public void outAComandoAtribuicao(AComandoAtribuicao node) {
 		// TODO Auto-generated method stub
-		String tipoVar = null;
-		String tipoExpr = OperacaoExpr(node.getExpr());
+		int tipoVar = -5;
+		int tipoExpr = OperacaoExpr(node.getExpr());
 		switch(node.getVar().getClass().toString())
 		 {
 		  	case "class node.AIdVar":				  		
@@ -499,9 +748,9 @@ public class Semantico extends DepthFirstAdapter {
 				 else{
 					 tipoVar = sim.getTipo();
 				 }
-				 if(tipoVar!=null)
+				 if(tipoVar!=-5)
 					{
-						if(tipoExpr !=  tipoVar && tipoExpr == "real" || tipoVar == "caractere"){
+						if(tipoExpr !=  tipoVar && tipoExpr == Simbolo.real || tipoVar == Simbolo.caractere){
 							System.err.println("Erro incompatibilidade de tipos na atribuição a variavel \'"+variavel.getIdentificador().getText()+"\' ["+
 							 		Integer.toString(variavel.getIdentificador().getLine())+
 				        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
@@ -512,7 +761,7 @@ public class Semantico extends DepthFirstAdapter {
 		  	case "class node.AVetorVar":				
 		  		 AVetorVar variavel2 = (AVetorVar) node.getVar();
 				 sim = tabelaSimbolos.get(variavel2.getIdentificador().getText());						
-				 if(OperacaoExpr((Node)variavel2.getExpr()) != "inteiro")
+				 if(OperacaoExpr((Node)variavel2.getExpr()) != Simbolo.inteiro)
 				 {
 					 System.err.println("Erro semantico: enderenço do vetor não é inteiro \'"+variavel2.getIdentificador().getText()+"\' ["+
 						 		Integer.toString(variavel2.getIdentificador().getLine())+
@@ -538,9 +787,9 @@ public class Semantico extends DepthFirstAdapter {
 				 {
 					 tipoVar = sim.getTipo();
 				 }
-				 if(tipoVar!=null)
+				 if(tipoVar!=-5)
 					{
-						if(tipoExpr !=  tipoVar && tipoExpr == "real" || tipoVar == "caractere"){
+						if(tipoExpr !=  tipoVar && tipoExpr == Simbolo.real || tipoVar == Simbolo.caractere){
 							System.err.println("Erro incompatibilidade de tipos na atribuição a variavel \'"+variavel2.getIdentificador().getText()+"\' ["+
 							 		Integer.toString(variavel2.getIdentificador().getLine())+
 				        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");

@@ -1,0 +1,24 @@
+/*
+	Universidade Federal de Sergipe
+	Departamento de Computação
+	
+	Compilador Portugol - programa de teste positivo 1
+
+	Professor: Kalil Araujo Bispo
+	Alunos:    Breno Cruz
+		   	   Claudio Mota Oliveira
+*/
+
+programa ProgramaDeTeste;
+inicio
+	inteiro: i,n;
+	
+	para i de 0 ate n faca
+		escreva('Comando para sem passo');
+	fim para;
+	
+	para i de 0 passo 2 ate n faca
+		escreva('Comando para com passo');
+	fim para;
+	
+fim.

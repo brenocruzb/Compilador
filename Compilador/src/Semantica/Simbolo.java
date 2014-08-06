@@ -1,7 +1,13 @@
 package Semantica;
 
 public class Simbolo {
-	public String tipo;
+	public static final int inteiro = 0;
+	public static final int caractere = 1;
+	public static final int real = 2;
+	public static final int booleano = 3;
+	public static final int ERRO = -1;
+	
+	private int tipo;
 	private int tamanho;
 	private Object valor;
 	
@@ -17,12 +23,21 @@ public class Simbolo {
 		this.tamanho = tamanho;
 	}
 	
-	public String getTipo() {
+	public int getTipo() {
 		return this.tipo;
 	}
-	public void setTipo(String tipo) {
+	public void setTipo(int tipo) {
 		this.tipo = tipo;
-		this.tipo = tipo.substring(0, tipo.length()-1);
+	}
+	public void setTipo(String tipo) {
+		if(tipo.contains("inteiro"))
+			this.tipo = Simbolo.inteiro;
+		else if(tipo.contains("real"))
+			this.tipo = Simbolo.real;
+		else if(tipo.contains("caractere"))
+			this.tipo = Simbolo.caractere;
+		else
+			System.out.println("ERRO tipo estranho:"+ tipo);
 	}
 	public Object getValor() {
 		return valor;
