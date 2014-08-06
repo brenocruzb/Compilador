@@ -16,4 +16,6 @@
 <fullyQualifiedTypeName name="java.lang.SuppressWarnings"/>
 <fullyQualifiedTypeName name="analysis.DepthFirstAdapter"/>
 <fullyQualifiedTypeName name="java.util.LinkedList"/>
+<fullyQualifiedTypeName name="node.AAddOperacao"/>
+<fullyQualifiedTypeName name="node.AVariavelExpr"/>
 </qualifiedTypeNameHistroy>

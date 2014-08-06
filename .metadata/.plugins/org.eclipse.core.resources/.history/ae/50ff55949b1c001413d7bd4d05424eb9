@@ -1,0 +1,514 @@
+package Semantica;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+
+import node.*;
+import analysis.DepthFirstAdapter;
+import Semantica.Simbolo;
+
+import java.util.HashMap;
+
+public class Semantico extends DepthFirstAdapter {
+
+	HashMap<String, Simbolo> tabelaSimbolos;
+	
+	public Semantico()
+	{
+		tabelaSimbolos = new HashMap<String, Simbolo>();
+	}
+	
+	private Simbolo getSimbolo(String valor)
+	{
+		Simbolo sim = new Simbolo();
+		if(valor.charAt(0)=='\'')
+		{
+			sim.setTipo("caractere");
+			sim.setTamanho(valor.length()-2);
+			sim.setValor(valor.substring(1,valor.length()-2));
+		}else
+		{
+			if(valor.contains(","))
+			{	sim.setTipo("real");
+				valor = valor.replace(',','.');   
+				sim.setValor(Double.parseDouble(valor));
+			}
+			else
+			{	sim.setTipo("inteiro");
+			 	sim.setValor(Integer.parseInt(valor));
+			}
+		}
+		return sim;
+	}
+	
+	@Override
+	public void outStart(Start node) {
+		// TODO Auto-generated method stub
+		super.outStart(node);
+	}
+
+	@Override
+	public void outATotal(ATotal node) {
+		// TODO Auto-generated method stub
+		String nomePrograma = node.getIdentificador().getText();
+		if(tabelaSimbolos.containsKey(nomePrograma)){	
+				System.err.println("Erro semantico: O nome do programa nao pode ser usado como variavel ["+Integer.toString(node.getIdentificador().getLine())+
+        		","+Integer.toString(node.getIdentificador().getPos())+"]");
+        }
+		super.outATotal(node);
+	}
+
+	@Override
+	public void outADconstanteDeclaracaoVariavel(
+			ADconstanteDeclaracaoVariavel node) {
+        String nome = node.getIdentificador().getText();
+        if(tabelaSimbolos.containsKey(nome))
+        {	System.err.println("Erro semantico: constante já declarada ["+Integer.toString(node.getIdentificador().getLine())+
+        		","+Integer.toString(node.getIdentificador().getPos())+"]");}
+        else
+        {
+        	tabelaSimbolos.put(nome, getSimbolo(node.getValor().toString()));
+        }
+		super.outADconstanteDeclaracaoVariavel(node);
+	}
+	
+	@Override
+	public void outAVariavelDeclaracaoVariavel(AVariavelDeclaracaoVariavel node) {
+		String tipo = node.getTipo().toString();
+		LinkedList<PVariaveld> lista = node.getPrimeiro();
+		String nome = "";
+		Node cara = node.getSegundo();
+		while(true){
+			switch (cara.getClass().toString())
+			{
+			case "class node.ASimplesVariaveld":
+				ASimplesVariaveld segundo = (ASimplesVariaveld) cara;
+				Token token = segundo.getIdentificador();
+				nome = token.getText();
+				
+				if(tabelaSimbolos.containsKey(nome))
+		        {	System.err.println("Erro semantico: variavel já declarada ["+Integer.toString(token.getLine())+
+		        		","+Integer.toString(token.getPos())+"]");}
+		        else
+		        {
+		        	Simbolo simbolo = new Simbolo();
+		        	simbolo.setTipo(tipo);
+		        	tabelaSimbolos.put(nome, simbolo);
+		        }
+			break;	
+			case "class node.AVetorVariaveld":
+				AVetorVariaveld segundo2 = (AVetorVariaveld) cara;
+				token = segundo2.getIdentificador();
+				nome = token.getText();
+				
+				if(tabelaSimbolos.containsKey(nome))
+		        {	System.err.println("Erro semantico: variavel já declarada ["+Integer.toString(token.getLine())+
+		        		","+Integer.toString(token.getPos())+"]");}
+		        else
+		        {
+		        	Simbolo simbolo = new Simbolo();
+		        	simbolo.setTipo(tipo);
+	        		simbolo.setTamanho(Integer.parseInt(segundo2.getNumero().getText()));
+	        		tabelaSimbolos.put(nome, simbolo);
+		        }
+			break;
+			}
+//			System.out.println(nome+":");
+//			Simbolo simbolo = tabelaSimbolos.get(nome);
+//			if(simbolo!=null)
+//			{
+//				if(simbolo.getValor() == null)
+//				{
+//					System.out.printf(" tipo "+  simbolo.getTipo() +", tamanho ");
+//				}else
+//				{
+//					System.out.printf(" valor "+ simbolo.getValor().toString() +" , tipo "+  simbolo.getTipo() +", tamanho ");
+//				}
+//				
+//				System.out.println(simbolo.getTamanho());
+//			}
+			if(lista.peek() != null)
+				cara = lista.pop();
+			else
+				break;
+			
+		}
+		
+		super.outAVariavelDeclaracaoVariavel(node);
+	}
+
+	@Override
+	public void outACaractereTipo(ACaractereTipo node) {
+		// TODO Auto-generated method stub
+		super.outACaractereTipo(node);
+	}
+
+	@Override
+	public void outAInteiroTipo(AInteiroTipo node) {
+		// TODO Auto-generated method stub
+		super.outAInteiroTipo(node);
+	}
+
+	@Override
+	public void outARealTipo(ARealTipo node) {
+		// TODO Auto-generated method stub
+		super.outARealTipo(node);
+	}
+
+	@Override
+	public void outAStringValor(AStringValor node) {
+		// TODO Auto-generated method stub
+		super.outAStringValor(node);
+	}
+
+	@Override
+	public void outANumeroValor(ANumeroValor node) {
+		// TODO Auto-generated method stub
+		super.outANumeroValor(node);
+	}
+
+	@Override
+	public void outARealValor(ARealValor node) {
+		// TODO Auto-generated method stub
+		super.outARealValor(node);
+	}
+
+	
+	@Override
+	public void outAOperacaoExpr(AOperacaoExpr node){
+		OperacaoExpr(node);
+	}
+	
+	public String OperacaoExpr(AOperacaoExpr node) {
+		// TODO Auto-generated method stub
+		PExpr esquerda = node.getPrimeiro();
+		
+		String resul_esq = "";
+		switch(esquerda.getClass().toString())
+		{
+			case "class node.AOperacaoExpr":
+				System.out.println("Entrei aqui");
+				 resul_esq = OperacaoExpr((AOperacaoExpr) esquerda);
+				 
+			break;
+			
+			case "class node.ANumeroExpr":
+				System.err.println("Entrei aqui");
+				 resul_esq = "inteiro";
+			break;
+			
+			case "class node.ARealExpr":
+				System.out.println("Entrei aqui2");
+				 resul_esq = "real";
+			  break;
+			
+			case "class node.AVariavelExpr":
+				System.out.println(((AVariavelExpr)esquerda).getVar().toString());
+				switch(((AVariavelExpr)esquerda).getVar().toString())
+				 {
+				  	case "class node.AIdVar":				  		
+						 AIdVar variavel = (AIdVar) ((AVariavelExpr)esquerda).getVar();
+						 Simbolo sim = tabelaSimbolos.get(variavel.getIdentificador().getText());
+						 if(tabelaSimbolos.containsKey(variavel.getIdentificador().getText()))
+						 {
+							 resul_esq = sim.getTipo();							
+						 }else
+						 {
+							 System.err.println("Erro semantico: variável não declarada ["+Integer.toString(variavel.getIdentificador().getLine())+
+						        		","+Integer.toString(variavel.getIdentificador().getPos())+"]");
+						 }
+					 
+					 break;
+				  	case "class node.AVetorVar":
+				  		 AVetorVar variavel2 = (AVetorVar) ((AVariavelExpr)esquerda).getVar();
+						 sim = tabelaSimbolos.get(variavel2.getIdentificador().getText());
+						 if(sim!=null)
+						 {
+							 resul_esq = sim.getTipo();
+						 }else
+						 {
+							 System.err.println("Erro semantico: variável não declarada ["+Integer.toString(variavel2.getIdentificador().getLine())+
+						        		","+Integer.toString(variavel2.getIdentificador().getPos())+"]");
+						 }
+						 
+				  	break;
+				 }
+			break;
+		}
+		PExpr direita = node.getSegundo();
+		super.outAOperacaoExpr(node);
+		return resul_esq;
+	}
+
+	@Override
+	public void outAOperacaologicaExpr(AOperacaologicaExpr node) {
+		// TODO Auto-generated method stub
+		
+		super.outAOperacaologicaExpr(node);
+	}
+
+	@Override
+	public void outANegativoExpr(ANegativoExpr node) {
+		// TODO Auto-generated method stub
+		super.outANegativoExpr(node);
+	}
+
+	@Override
+	public void outANegadoExpr(ANegadoExpr node) {
+		// TODO Auto-generated method stub
+		super.outANegadoExpr(node);
+	}
+
+	@Override
+	public void outAInternoExpr(AInternoExpr node) {
+		// TODO Auto-generated method stub
+		super.outAInternoExpr(node);
+	}
+
+	@Override
+	public void outANumeroExpr(ANumeroExpr node) {
+		// TODO Auto-generated method stub
+		super.outANumeroExpr(node);
+	}
+
+	@Override
+	public void outARealExpr(ARealExpr node) {
+		// TODO Auto-generated method stub
+		super.outARealExpr(node);
+	}
+
+	@Override
+	public void outAVariavelExpr(AVariavelExpr node) {
+		// TODO Auto-generated method stub
+		super.outAVariavelExpr(node);
+	}
+
+	@Override
+	public void outAIdVar(AIdVar node) {
+		// TODO Auto-generated method stub
+		super.outAIdVar(node);
+	}
+
+	@Override
+	public void outAVetorVar(AVetorVar node) {
+		// TODO Auto-generated method stub
+		super.outAVetorVar(node);
+	}
+
+	@Override
+	public void outAAddOperacao(AAddOperacao node) {
+		// TODO Auto-generated method stub
+		super.outAAddOperacao(node);
+	}
+
+	@Override
+	public void outASubOperacao(ASubOperacao node) {
+		// TODO Auto-generated method stub
+		super.outASubOperacao(node);
+	}
+
+	@Override
+	public void outAMultOperacao(AMultOperacao node) {
+		// TODO Auto-generated method stub
+		super.outAMultOperacao(node);
+	}
+
+	@Override
+	public void outADivOperacao(ADivOperacao node) {
+		// TODO Auto-generated method stub
+		super.outADivOperacao(node);
+	}
+
+	@Override
+	public void outAMenorigOperacaologica(AMenorigOperacaologica node) {
+		// TODO Auto-generated method stub
+		super.outAMenorigOperacaologica(node);
+	}
+
+	@Override
+	public void outAMaiorigOperacaologica(AMaiorigOperacaologica node) {
+		// TODO Auto-generated method stub
+		super.outAMaiorigOperacaologica(node);
+	}
+
+	@Override
+	public void outAMenorOperacaologica(AMenorOperacaologica node) {
+		// TODO Auto-generated method stub
+		super.outAMenorOperacaologica(node);
+	}
+
+	@Override
+	public void outAMaiorOperacaologica(AMaiorOperacaologica node) {
+		// TODO Auto-generated method stub
+		super.outAMaiorOperacaologica(node);
+	}
+
+	@Override
+	public void outAIgualOperacaologica(AIgualOperacaologica node) {
+		// TODO Auto-generated method stub
+		super.outAIgualOperacaologica(node);
+	}
+
+	@Override
+	public void outADiffOperacaologica(ADiffOperacaologica node) {
+		// TODO Auto-generated method stub
+		super.outADiffOperacaologica(node);
+	}
+
+	@Override
+	public void outAXorOperacaologica(AXorOperacaologica node) {
+		// TODO Auto-generated method stub
+		super.outAXorOperacaologica(node);
+	}
+
+	@Override
+	public void outAOuOperacaologica(AOuOperacaologica node) {
+		// TODO Auto-generated method stub
+		super.outAOuOperacaologica(node);
+	}
+
+	@Override
+	public void outAEOperacaologica(AEOperacaologica node) {
+		// TODO Auto-generated method stub
+		super.outAEOperacaologica(node);
+	}
+
+	@Override
+	public void outASeComandoSe(ASeComandoSe node) {
+		// TODO Auto-generated method stub
+		super.outASeComandoSe(node);
+	}
+
+	@Override
+	public void outASeNaoComandoSe(ASeNaoComandoSe node) {
+		// TODO Auto-generated method stub
+		super.outASeNaoComandoSe(node);
+	}
+
+	@Override
+	public void outAComandoRepita(AComandoRepita node) {
+		// TODO Auto-generated method stub
+		super.outAComandoRepita(node);
+	}
+
+	@Override
+	public void outAComandoEnquanto(AComandoEnquanto node) {
+		// TODO Auto-generated method stub
+		super.outAComandoEnquanto(node);
+	}
+
+	@Override
+	public void outACasos(ACasos node) {
+		// TODO Auto-generated method stub
+		super.outACasos(node);
+	}
+
+	@Override
+	public void outANormalComandoAvalie(ANormalComandoAvalie node) {
+		// TODO Auto-generated method stub
+		super.outANormalComandoAvalie(node);
+	}
+
+	@Override
+	public void outASenaoComandoAvalie(ASenaoComandoAvalie node) {
+		// TODO Auto-generated method stub
+		super.outASenaoComandoAvalie(node);
+	}
+
+	@Override
+	public void outANumParatipos(ANumParatipos node) {
+		// TODO Auto-generated method stub
+		super.outANumParatipos(node);
+	}
+
+	@Override
+	public void outAVarParatipos(AVarParatipos node) {
+		// TODO Auto-generated method stub
+		super.outAVarParatipos(node);
+	}
+
+	@Override
+	public void outASempassoComandoPara(ASempassoComandoPara node) {
+		// TODO Auto-generated method stub
+		super.outASempassoComandoPara(node);
+	}
+
+	@Override
+	public void outACompassoComandoPara(ACompassoComandoPara node) {
+		// TODO Auto-generated method stub
+		super.outACompassoComandoPara(node);
+	}
+
+	@Override
+	public void outANormalComandoEscrita(ANormalComandoEscrita node) {
+		// TODO Auto-generated method stub
+		super.outANormalComandoEscrita(node);
+	}
+
+	@Override
+	public void outAStrComandoEscrita(AStrComandoEscrita node) {
+		// TODO Auto-generated method stub
+		super.outAStrComandoEscrita(node);
+	}
+
+	@Override
+	public void outAComandoLeia(AComandoLeia node) {
+		// TODO Auto-generated method stub
+		super.outAComandoLeia(node);
+	}
+
+	@Override
+	public void outAComandoAtribuicao(AComandoAtribuicao node) {
+		// TODO Auto-generated method stub
+		super.outAComandoAtribuicao(node);
+	}
+
+	@Override
+	public void outALeiaComando(ALeiaComando node) {
+		// TODO Auto-generated method stub
+		super.outALeiaComando(node);
+	}
+
+	@Override
+	public void outARepitaComando(ARepitaComando node) {
+		// TODO Auto-generated method stub
+		super.outARepitaComando(node);
+	}
+
+	@Override
+	public void outAEnquantoComando(AEnquantoComando node) {
+		// TODO Auto-generated method stub
+		super.outAEnquantoComando(node);
+	}
+
+	@Override
+	public void outAAvaliarComando(AAvaliarComando node) {
+		// TODO Auto-generated method stub
+		super.outAAvaliarComando(node);
+	}
+
+	@Override
+	public void outAEscritaComando(AEscritaComando node) {
+		// TODO Auto-generated method stub
+		super.outAEscritaComando(node);
+	}
+
+	@Override
+	public void outASeComando(ASeComando node) {
+		// TODO Auto-generated method stub
+		super.outASeComando(node);
+	}
+
+	@Override
+	public void outAAtribuicaoComando(AAtribuicaoComando node) {
+		// TODO Auto-generated method stub
+		super.outAAtribuicaoComando(node);
+	}
+
+	@Override
+	public void outAParaComando(AParaComando node) {
+		// TODO Auto-generated method stub
+		super.outAParaComando(node);
+	}
+
+}
